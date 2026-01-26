@@ -9,7 +9,7 @@ import Image from "next/image";
 
 export default function Slider() {
   return (
-    <div className="w-full h-[500px]">
+    <div className="w-full h-[500px] relative z-10">
       <Swiper
         modules={[Autoplay, Navigation, Pagination]}
         slidesPerView={1}
@@ -26,7 +26,7 @@ export default function Slider() {
         className="h-full"
       >
         <SwiperSlide>
-          <div className="relative h-full bg-red-500">
+          <div className="relative h-full">
             <Image
               src="/imoveis1.png"
               alt="Imóvel 1"
@@ -39,31 +39,28 @@ export default function Slider() {
         </SwiperSlide>
 
         <SwiperSlide>
-          <div className="relative h-full bg-red-500">
+          <div className="relative h-full">
             <Image
               src="/imoveis2.webp"
               alt="Imóvel 2"
               fill
               className="object-cover"
-              priority
               sizes="100vw"
             />
           </div>
         </SwiperSlide>
 
         <SwiperSlide>
-          <div className="relative h-full bg-red-500">
+          <div className="relative h-full">
             <Image
               src="/imoveis3.jpg"
               alt="Imóvel 3"
               fill
               className="object-cover"
-              priority
               sizes="100vw"
             />
           </div>
         </SwiperSlide>
-
       </Swiper>
     </div>
   );
