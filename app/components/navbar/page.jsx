@@ -27,6 +27,11 @@ export default function Navbar() {
           </li>
           <li>
             <Link className="flex items-center gap-2 hover:underline" href="/">
+              Consórcio
+            </Link>
+          </li>
+          <li>
+            <Link className="flex items-center gap-2 hover:underline" href="/">
               Contato
             </Link>
           </li>
