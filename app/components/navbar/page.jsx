@@ -11,27 +11,27 @@ export default function Navbar() {
             </Link>
           </li>
           <li>
-            <Link className="flex items-center gap-2 hover:underline" href="/">
+            <Link className="flex items-center gap-2 hover:underline" href="/pages/sobre-nos">
               Sobre Nós
             </Link>
           </li>
           <li>
-            <Link className="flex items-center gap-2 hover:underline" href="/">
+            <Link className="flex items-center gap-2 hover:underline" href="/pages/vendas">
               Vendas
             </Link>
           </li>
           <li>
-            <Link className="flex items-center gap-2 hover:underline" href="/">
+            <Link className="flex items-center gap-2 hover:underline" href="/pages/locacao">
               Locação
             </Link>
           </li>
           <li>
-            <Link className="flex items-center gap-2 hover:underline" href="/">
+            <Link className="flex items-center gap-2 hover:underline" href="/pages/consorcio">
               Consórcio
             </Link>
           </li>
           <li>
-            <Link className="flex items-center gap-2 hover:underline" href="/">
+            <Link className="flex items-center gap-2 hover:underline" href="/pages/contato">
               Contato
             </Link>
           </li>
