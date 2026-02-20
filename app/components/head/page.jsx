@@ -4,9 +4,9 @@ import { BsEnvelope } from "react-icons/bs";
 
 export default function Head() {
   return (
-    <section className="px-6 py-2 align-center font-bold shadow-md" style={{ backgroundColor: '#FF0000', color: '#FFFFFF' }}>
+    <section className="px-6 py-2 align-center shadow-md" style={{ backgroundColor: '#E59C24', color: '#FFFFFF' }}>
 
-      <ul className="flex space-x-8 justify-center">
+      <ul className="flex space-x-8 justify-center text-xs">
         <li>
           <span className="flex items-center gap-2">
             <BsPinMapFill />
