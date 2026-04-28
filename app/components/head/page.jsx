@@ -6,6 +6,8 @@ import {
   BsPerson,
 } from "react-icons/bs";
 
+import Link from "next/link";
+
 export default function Head() {
   return (
     <section
@@ -23,40 +25,51 @@ export default function Head() {
           sm:text-xs
         "
       >
-        <li className="w-full xs:w-auto sm:w-auto">
-          <span className="flex items-center justify-center gap-2 px-4 py-2 hover:bg-[#1F3445] hover:text-white ease-in-out duration-300 cursor-pointer">
-            <BsHeart />
-            Favoritos&nbsp;
-          </span>
-        </li>
+        <Link href="/pages/liked">
+          <li className="w-full xs:w-auto sm:w-auto">
+            <span className="flex items-center justify-center gap-2 px-4 py-2 hover:bg-[#1F3445] hover:text-white ease-in-out duration-300 cursor-pointer">
+              <BsHeart />
+              Favoritos&nbsp;
+            </span>
+          </li>
+        </Link>
 
-        <li className="w-full xs:w-auto sm:w-auto">
-          <span className="flex items-center justify-center gap-2 px-4 py-2 hover:bg-[#1F3445] hover:text-white ease-in-out duration-300 cursor-pointer">
-            <BsHouseAdd />
-            Enviar Imóvel&nbsp;
-          </span>
-        </li>
+        <Link href="/pages/enviar-imovel">
+          <li className="w-full xs:w-auto sm:w-auto">
+            <span className="flex items-center justify-center gap-2 px-4 py-2 hover:bg-[#1F3445] hover:text-white ease-in-out duration-300 cursor-pointer">
+              <BsHouseAdd />
+              Enviar Imóvel&nbsp;
+            </span>
+          </li>
+        </Link>
 
-        <li className="w-full xs:w-auto sm:w-auto">
-          <span className="flex items-center justify-center gap-2 px-4 py-2 hover:bg-[#1F3445] hover:text-white ease-in-out duration-300 cursor-pointer">
-            <BsHouseCheck />
-            Meus Imóveis&nbsp;
-          </span>
-        </li>
+        <Link href="/pages/meus-imoveis">
+          <li className="w-full xs:w-auto sm:w-auto">
+            <span className="flex items-center justify-center gap-2 px-4 py-2 hover:bg-[#1F3445] hover:text-white ease-in-out duration-300 cursor-pointer">
+              <BsHouseCheck />
+              Meus Imóveis&nbsp;
+            </span>
+          </li>
+        </Link>
 
-        <li className="w-full xs:w-auto sm:w-auto">
-          <span className="flex items-center justify-center gap-2 px-4 py-2 hover:bg-[#1F3445] hover:text-white ease-in-out duration-300 cursor-pointer">
-            <BsPerson />
-            Meu Perfil&nbsp;
-          </span>
-        </li>
+        <Link href="/pages/meu-perfil">
+          <li className="w-full xs:w-auto sm:w-auto">
+            <span className="flex items-center justify-center gap-2 px-4 py-2 hover:bg-[#1F3445] hover:text-white ease-in-out duration-300 cursor-pointer">
+              <BsPerson />
+              Meu Perfil&nbsp;
+            </span>
+          </li>
+        </Link>
 
-        <li className="w-full xs:w-auto sm:w-auto">
-          <span className="flex items-center justify-center gap-2 px-4 py-2 bg-[#F29829] hover:bg-[#1F3445] hover:text-white ease-in-out duration-300 cursor-pointer">
-            <BsLock />
-            Login / Cadastro&nbsp;
-          </span>
-        </li>
+        <Link href="/pages/login">
+          <li className="w-full xs:w-auto sm:w-auto">
+            <span className="flex items-center justify-center gap-2 px-4 py-2 bg-[#F29829] hover:bg-[#1F3445] hover:text-white ease-in-out duration-300 cursor-pointer">
+              <BsLock />
+              Login / Cadastro&nbsp;
+            </span>
+          </li>
+        </Link>
+
       </ul>
     </section>
   );

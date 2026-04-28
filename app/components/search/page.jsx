@@ -60,7 +60,11 @@ export default function Search() {
   return (
     <div className="w-full flex justify-center px-4 py-12">
       <div className="w-full max-w-6xl rounded-xl bg-white px-6 py-6 text-black">
-        <h2 className="text-2xl font-bold text-center pb-8">Busca Avançada</h2>
+        <div className="flex flex-col items-center mb-12">
+          <h2 className="text-4xl font-bold text-center">Busca Avançada</h2>
+          <span className="block mt-2 h-1.5 w-48 bg-[#F29829] rounded-full" />
+        </div>
+
         <div className="grid grid-cols-1 gap-4 md:grid-cols-5">
           <SelectField
             label="Negócio"

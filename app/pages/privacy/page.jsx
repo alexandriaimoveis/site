@@ -1,17 +1,17 @@
 import Header from '@/app/components/header/page';
 import Head from '../../components/head/page';
 import Navbar from '../../components/navbar/page';
-import Footer from '../../components/footer/page';
+import Footer from '@/app/components/footer/page';
 
-export default function Consorcio() {
+export default function PoliticaDePrivacidade() {
   return (
     <>
       <Head />
       <Header />
       <Navbar />
       <div className='flex p-20'></div>
-      <h1 className='text-5xl font-bold text-center'>Consórcio</h1>
-      <p className='text-2xl font-bold text-center mb-31'>Página sobre os consórcios</p>
+      <h1 className='text-5xl font-bold text-center'>Política de Privacidade</h1>
+      <p className='text-2xl font-bold text-center mb-31'>Página sobre a política de privacidade</p>
       <Footer />
     </>
   );

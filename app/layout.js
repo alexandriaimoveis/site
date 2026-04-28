@@ -12,8 +12,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "SITE",
-  description: "Site do cliente",
+  title: "Alexandria Imóveis",
+  description: "Alexandria Imóveis - Encontre seu lar perfeito conosco. Oferecemos uma ampla variedade de imóveis para venda e aluguel, desde apartamentos modernos até casas aconchegantes. Explore nossas opções e encontre o imóvel dos seus sonhos hoje mesmo!",
 };
 
 export default function RootLayout({ children }) {

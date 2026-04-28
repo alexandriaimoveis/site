@@ -1,11 +1,14 @@
 import Head from "./components/head/page";
 import Header from "./components/header/page";
 import Navbar from "./components/navbar/page";
-import RealEstate from "./components/realestate/page";
 import Shorts from "./components/shorts/page";
 import Slider from "./components/slider/page";
 import AdvancedSearch from "./components/search/page";
-
+import HighLights from "./components/highlights/page";
+import Services from "./components/services/page";
+import Team from "./components/team/page";
+import Footer from "./components/footer/page"
+import WhatsAppButton from "./components/whatsapp/page";
 export default function Page() {
   return (
     <>
@@ -15,7 +18,11 @@ export default function Page() {
       <Slider />
       <AdvancedSearch />
       <Shorts />
-      <RealEstate />
+      <HighLights />
+      <Services />
+      <Team />
+      <Footer />
+      <WhatsAppButton />
     </>
   );
 }

@@ -10,7 +10,6 @@ export default function Header() {
           sm:flex-row sm:items-center sm:justify-between
         "
       >
-        {/* Logo */}
         <div className="flex items-center justify-center sm:justify-start">
           <Image
             src="/logo.png"
@@ -21,7 +20,6 @@ export default function Header() {
           />
         </div>
 
-        {/* Contatos */}
         <div
           className="
             flex flex-col items-center gap-3 text-xs
@@ -34,7 +32,7 @@ export default function Header() {
             </span>
             <div className="leading-tight text-center sm:text-left">
               <p className="font-semibold">Contato</p>
-              <p className="text-black">+55 (35) 9 9999-9999</p>
+              <p className="text-black">+55 (35) 9 8713-1293</p>
             </div>
           </div>
 

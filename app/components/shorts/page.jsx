@@ -10,7 +10,11 @@ const shortsIds = [
 export default function Shorts() {
   return (
     <section className="bg-[#F2C894] py-12">
-      <h2 className="text-2xl font-bold text-center pb-8">Novidades da Alexandria</h2>
+      <div className="flex flex-col items-center mb-12">
+        <h2 className="text-4xl font-bold text-center">Novidades da Alexandria</h2>
+        <span className="block mt-2 h-1.5 w-48 bg-[#F29829] rounded-full" />
+      </div>
+      
       <div className="relative flex flex-wrap justify-center gap-4 px-4">
         {shortsIds.map((id, index) => (
           <div
