@@ -12,10 +12,9 @@ export default function Footer() {
 
       <div className="flex flex-col md:flex-row flex-wrap justify-center gap-10 md:gap-16">
         <div className="flex-1 min-w-[280px] max-w-sm">
-          <h3 className="mb-4 font-bold text-xl text-center md:text-left">SOBRE NÓS</h3>
+          <h3 className="mb-4 font-bold text-xl text-center md:text-left">QUEM SOMOS NÓS?</h3>
           <hr className="mb-4 w-1/2 ml-0" />
-          <p className="mb-4">Somos uma imobiliária dedicada a ajudar nossos clientes a encontrar o imóvel dos seus sonhos. Com anos de experiência no mercado, oferecemos um serviço personalizado e de alta qualidade.</p>
-          <p className="mb-4">CNPJ: 00.000.000/0001-00</p>
+          <p className="mb-4">Meu nome é Alexandre, o nome do meu pai também é Alexandre e juntos, somos os fundadores da Alexandria Negócios Imobiliários. O nome da imobiliária foi inspirado na cidade de Alexandria fundada em 331 a.C. por Alexandre o Grande. O objetivo de Alexandre naquela época era criar um grande porto comercial e centro cultural que conectasse o mundo grego com o Egito e outras regiões do Oriente. E baseado nessa ideia é esse conceito que trazemos para nossa imobiliária, conectar pessoas a imóveis, sonhos a realização, e efetuar bons negócios aos nossos clientes.</p>
         </div>
 
         <div className="flex-1 min-w-[280px] max-w-sm">
