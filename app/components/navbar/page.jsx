@@ -67,6 +67,14 @@ export default function Navbar() {
                 Contato
               </Link>
             </li>
+            <li>
+              <Link
+                className="p-2 bg-[#F29829] text-white hover:text-black ease-in-out duration-300"
+                href="/pages/sao-lourenco"
+              >
+                Conheça São Lourenço
+              </Link>
+            </li>
           </ul>
         </nav>
 
