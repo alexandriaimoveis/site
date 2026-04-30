@@ -45,7 +45,7 @@ export default function Footer() {
       </div>
 
       <div className="text-center mt-12">
-        <p>&copy; 2026 Alexandria Negócios Imobiliários. Todos os direitos reservados.</p>
+        <p>&copy; {new Date().getFullYear()} Alexandria Negócios Imobiliários. Todos os direitos reservados.</p>
         <p>Desenvolvido com tecnologia por <Link href="https://www.rixxer.com.br" target="_blank" className="hover:font-bold transition ease-in-out duration-300 hover:text-[#F29829]">Rixxer</Link></p>
       </div>
 
