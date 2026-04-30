@@ -4,7 +4,7 @@ import Navbar from "./components/navbar/page";
 import Shorts from "./components/shorts/page";
 import Slider from "./components/slider/page";
 import AdvancedSearch from "./components/search/page";
-import HighLights from "./components/highlights/page";
+import HighLights from "./components/highlights";
 import Services from "./components/services/page";
 import Footer from "./components/footer/page"
 import WhatsAppButton from "./components/whatsapp/page";

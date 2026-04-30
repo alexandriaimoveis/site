@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import { BiSolidHeart, BiBed, BiBath, BiArea } from "react-icons/bi";
-import { supabase } from "../../lib/supabase";
+import { supabase } from "../lib/supabase";
 
 function ImovelCard({ imovel }) {
   const [favorito, setFavorito] = useState(false);
