@@ -33,7 +33,7 @@ export default function Footer() {
         <div className="flex-1 min-w-[280px] max-w-sm">
           <h3 className="mb-4 font-bold text-xl text-center md:text-left">CONTATO</h3>
           <hr className="mb-4 w-1/2 ml-0" />
-          <p className="mb-4 flex items-center gap-2"><BiMap />Endereço: Rua Exemplo, 123 - Cidade, Estado, CEP</p>
+          <p className="mb-4 flex items-center gap-2"><BiMap />Endereço: Praça Doutor Ismael de Souza, nº 11, loja 03 - Bairro Estação</p>
           <p className="mb-4 flex items-center gap-2"><BiPhone /> Telefone: (35) 9 8713-1293</p>
           <p className="mb-4 flex items-center gap-2"><BiSolidTime /> Horário de Funcionamento: Segunda a Sexta, 9h às 18h</p>
           <hr className="mb-4 w-1/2 ml-0" />

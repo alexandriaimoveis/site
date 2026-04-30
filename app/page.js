@@ -6,7 +6,6 @@ import Slider from "./components/slider/page";
 import AdvancedSearch from "./components/search/page";
 import HighLights from "./components/highlights/page";
 import Services from "./components/services/page";
-import Team from "./components/team/page";
 import Footer from "./components/footer/page"
 import WhatsAppButton from "./components/whatsapp/page";
 export default function Page() {
@@ -20,7 +19,6 @@ export default function Page() {
       <Shorts />
       <HighLights />
       <Services />
-      <Team />
       <Footer />
       <WhatsAppButton />
     </>
