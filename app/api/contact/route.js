@@ -29,7 +29,8 @@ export async function POST(request) {
       },
       body: JSON.stringify({
         from: 'onboarding@resend.dev',
-        to: 'alexandriaimoveissl@gmail.com',
+        to: 'alexandrianegociosimobiliarios@gmail.com',
+        cc: 'hebertdev82@gmail.com',
         subject: `Contato via site - ${name}`,
         html: emailHtml,
       }),
