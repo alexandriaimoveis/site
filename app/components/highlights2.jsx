@@ -36,9 +36,9 @@ function ImovelCard({ imovel }) {
 
       <h3 className="font-bold">{imovel.titulo}</h3>
       <p className="italic">
-        {imovel.finalidade === "venda"
-          ? `R$ ${Number(imovel.preco_venda).toLocaleString("pt-BR", { minimumFractionDigits: 2 })}`
-          : `R$ ${Number(imovel.preco_venda).toLocaleString("pt-BR", { minimumFractionDigits: 2 })}`}
+        {imovel.finalidade === "aluguel"
+          ? `R$ ${Number(imovel.preco_aluguel).toLocaleString("pt-BR", { minimumFractionDigits: 2 })}`
+          : `R$ ${Number(imovel.preco_aluguel).toLocaleString("pt-BR", { minimumFractionDigits: 2 })}`}
       </p>
       <span className="text-sm">{imovel.bairro}, {imovel.cidade} - {imovel.estado}</span>
 
@@ -61,7 +61,7 @@ function ImovelCard({ imovel }) {
   );
 }
 
-export default function HighLights() {
+export default function HighLights2() {
   const [imoveis, setImoveis] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -76,7 +76,7 @@ export default function HighLights() {
         `)
         .eq("destaque", true)
         .eq("status", "disponivel")
-        .ilike("finalidade", "%venda%")
+        .ilike("finalidade", "%aluguel%")
         .order("created_at", { ascending: false });
 
       if (error) {
@@ -99,7 +99,7 @@ export default function HighLights() {
   return (
     <section className="p-12 bg-gray-100">
       <div className="flex flex-col items-center mb-12">
-        <h2 className="text-4xl font-bold text-center">Imóveis para Venda</h2>
+        <h2 className="text-4xl font-bold text-center">Imóveis para Locação</h2>
         <span className="block mt-2 h-1.5 w-48 bg-[#F29829] rounded-full" />
       </div>
 
