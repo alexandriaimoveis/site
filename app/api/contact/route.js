@@ -28,7 +28,7 @@ export async function POST(request) {
         Authorization: `Bearer ${resendApiKey}`,
       },
       body: JSON.stringify({
-        from: 'onboarding@resend.dev',
+        from: 'contato@alexandriaimobiliaria.com.br',
         to: 'alexandrianegociosimobiliarios@gmail.com',
         cc: 'hebertdev82@gmail.com',
         subject: `Contato via site - ${name}`,
