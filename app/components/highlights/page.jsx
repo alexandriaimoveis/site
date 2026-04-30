@@ -1,59 +1,51 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
-import {
-  BiSolidHeart,
-  BiBed,
-  BiBath,
-  BiArea,
-} from "react-icons/bi";
-
-const imoveis = [
-  { id: 1, titulo: "Casa à Venda", tipo: "Venda", preco: "R$ 2.052.462,00", local: "Vila Nova, São Lourenço - MG", dormitorios: 2, banheiros: 2, area: "147,04m²", img: "/imoveis1.png" },
-  { id: 2, titulo: "Casa à Venda", tipo: "Venda", preco: "R$ 2.052.462,00", local: "Vila Nova, São Lourenço - MG", dormitorios: 2, banheiros: 2, area: "147,04m²", img: "/imoveis1.png" },
-  { id: 3, titulo: "Casa à Venda", tipo: "Venda", preco: "R$ 2.052.462,00", local: "Vila Nova, São Lourenço - MG", dormitorios: 2, banheiros: 2, area: "147,04m²", img: "/imoveis1.png" },
-  { id: 4, titulo: "Apartamento", tipo: "Aluguel", preco: "R$ 3.500,00/mês", local: "Centro, São Lourenço - MG", dormitorios: 3, banheiros: 1, area: "89,00m²", img: "/imoveis1.png" },
-  { id: 5, titulo: "Apartamento", tipo: "Aluguel", preco: "R$ 3.500,00/mês", local: "Centro, São Lourenço - MG", dormitorios: 3, banheiros: 1, area: "89,00m²", img: "/imoveis1.png" },
-  { id: 6, titulo: "Apartamento", tipo: "Aluguel", preco: "R$ 3.500,00/mês", local: "Centro, São Lourenço - MG", dormitorios: 3, banheiros: 1, area: "89,00m²", img: "/imoveis1.png" },
-  { id: 7, titulo: "Terreno", tipo: "Venda", preco: "R$ 980.000,00", local: "Jardins, São Lourenço - MG", dormitorios: 0, banheiros: 0, area: "320,00m²", img: "/imoveis1.png" },
-  { id: 8, titulo: "Terreno", tipo: "Venda", preco: "R$ 980.000,00", local: "Jardins, São Lourenço - MG", dormitorios: 0, banheiros: 0, area: "320,00m²", img: "/imoveis1.png" },
-  { id: 9, titulo: "Casa à Venda", tipo: "Venda", preco: "R$ 2.052.462,00", local: "Vila Nova, São Lourenço - MG", dormitorios: 2, banheiros: 2, area: "147,04m²", img: "/imoveis1.png" },
-  { id: 10, titulo: "Casa à Venda", tipo: "Venda", preco: "R$ 2.052.462,00", local: "Vila Nova, São Lourenço - MG", dormitorios: 2, banheiros: 2, area: "147,04m²", img: "/imoveis1.png" },
-  { id: 11, titulo: "Casa à Venda", tipo: "Venda", preco: "R$ 2.052.462,00", local: "Vila Nova, São Lourenço - MG", dormitorios: 2, banheiros: 2, area: "147,04m²", img: "/imoveis1.png" },
-  { id: 12, titulo: "Apartamento", tipo: "Aluguel", preco: "R$ 3.500,00/mês", local: "Centro, São Lourenço - MG", dormitorios: 3, banheiros: 1, area: "89,00m²", img: "/imoveis1.png" },
-];
+import { BiSolidHeart, BiBed, BiBath, BiArea } from "react-icons/bi";
+import { supabase } from "../../lib/supabase";
 
 function ImovelCard({ imovel }) {
   const [favorito, setFavorito] = useState(false);
+
   return (
     <div className="group w-full max-w-sm border border-gray-400 rounded-3xl shadow-sm text-center flex flex-col items-center overflow-hidden">
       <div className="relative w-full mb-4">
-        <Image
-          src={imovel.img}
-          alt={imovel.titulo}
-          width={400}
-          height={400}
-          className="rounded-t-3xl w-full transition-transform duration-300 group-hover:scale-105"
-        />
+        {imovel.img_url ? (
+          <Image
+            src={imovel.img_url}
+            alt={imovel.titulo}
+            width={400}
+            height={260}
+            className="rounded-t-3xl w-full h-[260px] object-cover transition-transform duration-300 group-hover:scale-105"
+          />
+        ) : (
+          <div className="rounded-t-3xl w-full h-[260px] bg-gray-200 flex items-center justify-center text-gray-500">
+            Sem imagem
+          </div>
+        )}
         <span className="absolute top-3 right-3 bg-[#F29829] text-sm px-3 py-1 rounded-full">
-          {imovel.tipo}
+          {imovel.finalidade}
         </span>
-
         <button
           onClick={() => setFavorito(!favorito)}
           className="absolute top-3 left-3 bg-white p-2 rounded-full shadow-md transition-transform duration-200 hover:scale-110"
         >
           <BiSolidHeart size={20} className={favorito ? "text-red-500" : "text-gray-400"} />
         </button>
-
       </div>
+
       <h3 className="font-bold">{imovel.titulo}</h3>
-      <p className="italic">{imovel.preco}</p>
-      <span className="text-sm">{imovel.local}</span>
+      <p className="italic">
+        {imovel.finalidade === "venda"
+          ? `R$ ${Number(imovel.preco_venda).toLocaleString("pt-BR", { minimumFractionDigits: 2 })}`
+          : `R$ ${Number(imovel.preco_venda).toLocaleString("pt-BR", { minimumFractionDigits: 2 })}`}
+      </p>
+      <span className="text-sm">{imovel.bairro}, {imovel.cidade} - {imovel.estado}</span>
+
       <ul className="flex gap-4 justify-center items-center w-full bg-[#F2C894] mt-4 p-4 rounded-b-3xl">
-        {imovel.dormitorios > 0 && (
+        {imovel.quartos > 0 && (
           <li className="flex flex-col items-center gap-1 text-xs font-bold">
-            <BiBed size={20} /> {imovel.dormitorios} Dormitórios
+            <BiBed size={20} /> {imovel.quartos} Dormitórios
           </li>
         )}
         {imovel.banheiros > 0 && (
@@ -62,7 +54,7 @@ function ImovelCard({ imovel }) {
           </li>
         )}
         <li className="flex flex-col items-center gap-1 text-xs font-bold">
-          <BiArea size={20} /> Área: {imovel.area}
+          <BiArea size={20} /> Área: {imovel.area_construida}m²
         </li>
       </ul>
     </div>
@@ -70,10 +62,43 @@ function ImovelCard({ imovel }) {
 }
 
 export default function HighLights() {
+  const [imoveis, setImoveis] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchImoveis() {
+      const { data, error } = await supabase
+        .from("imoveis")
+        .select(`
+          id, titulo, finalidade, preco_venda, preco_aluguel,
+          bairro, cidade, estado, quartos, banheiros, area_construida,
+          imovel_imagens (url, capa)
+        `)
+        .eq("destaque", true)
+        .eq("status", "disponivel")
+        .order("created_at", { ascending: false });
+
+      if (error) {
+        console.error("Erro ao buscar imóveis:", error.message);
+      } else {
+        const imoveisComImg = data.map((imovel) => {
+          const capa = imovel.imovel_imagens?.find((img) => img.capa);
+          return { ...imovel, img_url: capa?.url || null };
+        });
+        setImoveis(imoveisComImg);
+      }
+      setLoading(false);
+    }
+
+    fetchImoveis();
+  }, []);
+
+  if (loading) return <p className="text-center py-12">Carregando imóveis...</p>;
+
   return (
     <section className="p-12 bg-gray-100">
       <div className="flex flex-col items-center mb-12">
-        <h2 className="text-4xl font-bold text-center">Imóveis em destaque</h2>
+        <h2 className="text-4xl font-bold text-center">Imóveis para Venda</h2>
         <span className="block mt-2 h-1.5 w-48 bg-[#F29829] rounded-full" />
       </div>
 
