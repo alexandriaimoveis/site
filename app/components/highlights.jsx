@@ -6,6 +6,10 @@ import { supabase } from "../lib/supabase";
 
 function ImovelCard({ imovel }) {
   const [favorito, setFavorito] = useState(false);
+  
+  const exibirPreco = imovel.finalidade === "aluguel" 
+    ? imovel.preco_aluguel 
+    : imovel.preco_venda;
 
   return (
     <div className="group w-full max-w-sm border border-gray-400 rounded-3xl shadow-sm text-center flex flex-col items-center overflow-hidden">
@@ -72,6 +76,7 @@ export default function HighLights() {
         .select(`
           id, titulo, finalidade, preco_venda, preco_aluguel,
           bairro, cidade, estado, quartos, banheiros, area_construida,
+          destaque, status,
           imovel_imagens (url, capa)
         `)
         .eq("destaque", true)
@@ -80,10 +85,12 @@ export default function HighLights() {
         .order("created_at", { ascending: false });
 
       if (error) {
-        console.error("Erro ao buscar imóveis:", error.message);
+        console.error("Erro Supabase:", error.message);
       } else {
+        console.log("Imóveis encontrados:", data.length); // Verifique isso no console do navegador
+        
         const imoveisComImg = data.map((imovel) => {
-          const capa = imovel.imovel_imagens?.find((img) => img.capa);
+          const capa = imovel.imovel_imagens?.find((img) => img.capa) || imovel.imovel_imagens?.[0];
           return { ...imovel, img_url: capa?.url || null };
         });
         setImoveis(imoveisComImg);
@@ -99,15 +106,19 @@ export default function HighLights() {
   return (
     <section className="p-12 bg-gray-100">
       <div className="flex flex-col items-center mb-12">
-        <h2 className="text-4xl font-bold text-center">Imóveis para Venda</h2>
+        <h2 className="text-4xl font-bold text-center">Destaques para Venda</h2>
         <span className="block mt-2 h-1.5 w-48 bg-[#F29829] rounded-full" />
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 justify-items-center gap-6 max-w-6xl mx-auto">
-        {imoveis.map((imovel) => (
-          <ImovelCard key={imovel.id} imovel={imovel} />
-        ))}
-      </div>
+      {imoveis.length === 0 ? (
+        <p className="text-center text-gray-500">Nenhum imóvel em destaque disponível no momento.</p>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-3 justify-items-center gap-6 max-w-6xl mx-auto">
+          {imoveis.map((imovel) => (
+            <ImovelCard key={imovel.id} imovel={imovel} />
+          ))}
+        </div>
+      )}
     </section>
   );
 }
