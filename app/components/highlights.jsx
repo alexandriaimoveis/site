@@ -40,9 +40,7 @@ function ImovelCard({ imovel }) {
 
       <h3 className="font-bold">{imovel.titulo}</h3>
       <p className="italic">
-        {imovel.finalidade === "venda"
-          ? `R$ ${Number(imovel.preco_venda).toLocaleString("pt-BR", { minimumFractionDigits: 2 })}`
-          : `R$ ${Number(imovel.preco_venda).toLocaleString("pt-BR", { minimumFractionDigits: 2 })}`}
+        R$ {Number(imovel.preco_venda).toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
       </p>
       <span className="text-sm">{imovel.bairro}, {imovel.cidade} - {imovel.estado}</span>
 
@@ -87,7 +85,7 @@ export default function HighLights() {
       if (error) {
         console.error("Erro Supabase:", error.message);
       } else {
-        console.log("Imóveis encontrados:", data.length); // Verifique isso no console do navegador
+        console.log("Imóveis encontrados:", data.length);
         
         const imoveisComImg = data.map((imovel) => {
           const capa = imovel.imovel_imagens?.find((img) => img.capa) || imovel.imovel_imagens?.[0];
