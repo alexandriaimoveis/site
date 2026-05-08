@@ -54,14 +54,6 @@ export default function Navbar() {
             <li>
               <Link
                 className="hover:text-[#F29829] ease-in-out duration-300"
-                href="/pages/consorcio"
-              >
-                Consórcio
-              </Link>
-            </li>
-            <li>
-              <Link
-                className="hover:text-[#F29829] ease-in-out duration-300"
                 href="/pages/contato"
               >
                 Contato
