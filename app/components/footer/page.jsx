@@ -25,7 +25,6 @@ export default function Footer() {
             <li className="flex items-center gap-2 hover:font-bold transition ease-in-out duration-300 hover:text-[#F29829]"><BiRightArrowAlt /> <Link href="/pages/sobre-nos">Sobre Nós</Link></li>
             <li className="flex items-center gap-2 hover:font-bold transition ease-in-out duration-300 hover:text-[#F29829]"><BiRightArrowAlt /> <Link href="/pages/vendas">Vendas</Link></li>
             <li className="flex items-center gap-2 hover:font-bold transition ease-in-out duration-300 hover:text-[#F29829]"><BiRightArrowAlt /> <Link href="/pages/locacao">Locação</Link></li>
-            <li className="flex items-center gap-2 hover:font-bold transition ease-in-out duration-300 hover:text-[#F29829]"><BiRightArrowAlt /> <Link href="/pages/consorcio">Consórcio</Link></li>
             <li className="flex items-center gap-2 hover:font-bold transition ease-in-out duration-300 hover:text-[#F29829]"><BiRightArrowAlt /> <Link href="/pages/contato">Contato</Link></li>
           </ul>
         </div>
