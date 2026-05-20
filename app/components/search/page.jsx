@@ -1,6 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { supabase } from "../../lib/supabase";
 
 const priceFormatter = (value) =>
   value.toLocaleString("pt-BR", {
@@ -9,52 +11,82 @@ const priceFormatter = (value) =>
     maximumFractionDigits: 2,
   });
 
-const options = {
-  negocio: ["Venda", "Aluguel"],
-  tipoImovel: ["Apartamento", "Casa", "Cobertura", "Terreno", "Sala comercial"],
-  cidade: ["Passa Quatro", "São Lourenço", "Itanhandu", "Pouso Alegre"],
-  bairro: ["Centro", "Bairro 1", "Bairro 2", "Zona Rural"],
-  codigo: ["Código específico"],
-  categoria: ["Residencial", "Comercial", "Rural", "Lançamento"],
-  caracteristicas: [
-    "Mobiliado",
-    "Área gourmet",
-    "Piscina",
-    "Portaria 24h",
-    "Academia",
-  ],
-  banheiros: ["1+", "2+", "3+", "4+"],
-  dormitorios: ["1+", "2+", "3+", "4+"],
-
-  suites: ["0", "1+", "2+", "3+"],
-  vagas: ["0", "1+", "2+", "3+", "4+"],
-  condominios: ["Com condomínio", "Sem condomínio"],
-};
-
 export default function Search() {
+  const router = useRouter();
+
+  const [dynamicOptions, setDynamicOptions] = useState({
+    cidades: [],
+    bairros: [],
+    tipos: [] 
+  });
+
   const [filters, setFilters] = useState({
-    negocio: "Venda",
+    finalidade: "Venda", 
     tipoImovel: "",
     cidade: "",
     bairro: "",
-    codigo: "",
-    categoria: "",
-    caracteristicas: "",
+    id: "",            
     banheiros: "",
-    dormitorios: "",
-    suites: "",
-    vagas: "",
-    condominios: "",
-    precoMin: 50000,
-    precoMax: 15000000,
+    quartos: "",       
+    precoMax: 2000000,
   });
 
+  const isAluguel = filters.finalidade === "Aluguel";
+  const maxPriceLimit = isAluguel ? 20000 : 5000000;
+  const stepLimit = isAluguel ? 100 : 10000;
+
+  useEffect(() => {
+    async function loadDynamicOptions() {
+      const { data, error } = await supabase
+        .from("imoveis")
+        .select("cidade, bairro, tipo")
+        .eq("status", "disponivel");
+
+      if (error) {
+        console.error("Erro ao carregar opções do filtro:", error.message);
+        return;
+      }
+
+      if (data) {
+        const cidadesUnicas = [...new Set(data.map(item => item.cidade).filter(Boolean))].sort();
+        const bairrosUnicos = [...new Set(data.map(item => item.bairro).filter(Boolean))].sort();
+        const tiposUnicos = [...new Set(data.map(item => item.tipo).filter(Boolean))].sort();
+
+        setDynamicOptions({
+          cidades: cidadesUnicas,
+          bairros: bairrosUnicos,
+          tipos: tiposUnicos
+        });
+      }
+    }
+
+    loadDynamicOptions();
+  }, []);
+
   const handleChange = (field, value) => {
-    setFilters((prev) => ({ ...prev, [field]: value }));
+    setFilters((prev) => {
+      const updated = { ...prev, [field]: value };
+      
+      if (field === "finalidade") {
+        updated.precoMax = value === "Aluguel" ? 5000 : 2000000;
+      }
+      return updated;
+    });
   };
 
   const handleSearch = () => {
-    console.log("Filtros:", filters);
+    const params = new URLSearchParams();
+
+    if (filters.finalidade) params.append("finalidade", filters.finalidade.toLowerCase());
+    if (filters.tipoImovel) params.append("tipo", filters.tipoImovel);
+    if (filters.cidade) params.append("cidade", filters.cidade);
+    if (filters.bairro) params.append("bairro", filters.bairro);
+    if (filters.id) params.append("id", filters.id);
+    if (filters.quartos) params.append("quartos", filters.quartos);
+    if (filters.banheiros) params.append("banheiros", filters.banheiros);
+    if (filters.precoMax) params.append("precoMax", filters.precoMax.toString());
+
+    router.push(`/pages/resultados?${params.toString()}`);
   };
 
   return (
@@ -68,110 +100,71 @@ export default function Search() {
         <div className="grid grid-cols-1 gap-4 md:grid-cols-5">
           <SelectField
             label="Negócio"
-            value={filters.negocio}
-            options={options.negocio}
-            onChange={(v) => handleChange("negocio", v)}
+            value={filters.finalidade}
+            options={["Venda", "Aluguel"]}
+            onChange={(v) => handleChange("finalidade", v)}
           />
           <SelectField
             label="Tipo de imóvel"
             value={filters.tipoImovel}
-            options={options.tipoImovel}
+            options={dynamicOptions.tipos.length > 0 ? dynamicOptions.tipos : ["Casa", "Apartamento", "Terreno"]}
             onChange={(v) => handleChange("tipoImovel", v)}
           />
           <SelectField
             label="Cidade"
             value={filters.cidade}
-            options={options.cidade}
+            options={dynamicOptions.cidades}
             onChange={(v) => handleChange("cidade", v)}
           />
           <SelectField
             label="Bairro"
             value={filters.bairro}
-            options={options.bairro}
+            options={dynamicOptions.bairros}
             onChange={(v) => handleChange("bairro", v)}
           />
           <InputField
-            label="Código"
-            placeholder="Ex: 1234"
-            value={filters.codigo}
-            onChange={(v) => handleChange("codigo", v)}
+            label="Código (ID)"
+            placeholder="Ex: 1"
+            value={filters.id}
+            onChange={(v) => handleChange("id", v)}
           />
         </div>
 
-        <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-4">
+        <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
           <SelectField
-            label="Categoria"
-            value={filters.categoria}
-            options={options.categoria}
-            onChange={(v) => handleChange("categoria", v)}
-          />
-          <SelectField
-            label="Características"
-            value={filters.caracteristicas}
-            options={options.caracteristicas}
-            onChange={(v) => handleChange("caracteristicas", v)}
+            label="Dormitórios (Quartos)"
+            value={filters.quartos}
+            options={["1", "2", "3", "4"]}
+            onChange={(v) => handleChange("quartos", v)}
           />
           <SelectField
             label="Banheiros"
             value={filters.banheiros}
-            options={options.banheiros}
+            options={["1", "2", "3", "4"]}
             onChange={(v) => handleChange("banheiros", v)}
-          />
-          <SelectField
-            label="Dormitórios"
-            value={filters.dormitorios}
-            options={options.dormitorios}
-            onChange={(v) => handleChange("dormitorios", v)}
-          />
-        </div>
-
-        <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-3">
-          <SelectField
-            label="Suítes"
-            value={filters.suites}
-            options={options.suites}
-            onChange={(v) => handleChange("suites", v)}
-          />
-          <SelectField
-            label="Vagas"
-            value={filters.vagas}
-            options={options.vagas}
-            onChange={(v) => handleChange("vagas", v)}
-          />
-          <SelectField
-            label="Condomínios"
-            value={filters.condominios}
-            options={options.condominios}
-            onChange={(v) => handleChange("condominios", v)}
           />
         </div>
 
         <div className="mt-6 flex flex-col items-center gap-4 md:flex-row md:items-center md:justify-between">
           <div className="w-full md:w-3/4">
             <p className="mb-2 text-center text-xs font-semibold uppercase tracking-[0.15em] text-gray-600">
-              Preços
+              Preço Máximo: <span className="font-bold text-gray-900">{priceFormatter(filters.precoMax)}</span>
             </p>
 
-            <div className="flex flex-col gap-3">
-              <div className="flex items-center gap-4">
-                <span className="w-24 text-xs text-gray-700">
-                  {priceFormatter(filters.precoMin)}
-                </span>
-                <input
-                  type="range"
-                  min={50000}
-                  max={15000000}
-                  step={10000}
-                  value={filters.precoMin}
-                  onChange={(e) =>
-                    handleChange("precoMin", Number(e.target.value))
-                  }
-                  className="h-1 w-full cursor-pointer appearance-none rounded-full bg-gray-200 accent-sky-600"
-                />
-                <span className="w-28 text-xs text-right text-gray-700">
-                  {priceFormatter(filters.precoMax)}
-                </span>
-              </div>
+            <div className="flex items-center gap-4">
+              <span className="text-xs text-gray-500">R$ 0,00</span>
+              <input
+                type="range"
+                min={0}
+                max={maxPriceLimit}
+                step={stepLimit}
+                value={filters.precoMax}
+                onChange={(e) =>
+                  handleChange("precoMax", Number(e.target.value))
+                }
+                className="h-1 w-full cursor-pointer appearance-none rounded-full bg-gray-200 accent-sky-600"
+              />
+              <span className="text-xs text-gray-500">{priceFormatter(maxPriceLimit)}</span>
             </div>
           </div>
 
@@ -199,7 +192,7 @@ function SelectField({ label, value, options, onChange }) {
         onChange={(e) => onChange(e.target.value)}
         className="h-9 rounded-md border border-gray-300 bg-white px-2 text-sm text-gray-900 outline-none focus:border-sky-600 focus:ring-1 focus:ring-sky-600"
       >
-        <option value="">Selecionar</option>
+        <option value="">Todos</option>
         {options.map((opt) => (
           <option key={opt} value={opt}>
             {opt}
