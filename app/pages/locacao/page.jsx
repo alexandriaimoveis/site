@@ -1,11 +1,14 @@
 "use client";
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import Header from '@/app/components/header/page';
-import Head from '../../components/head/page';
-import Navbar from '../../components/navbar/page';
-import Footer from '@/app/components/footer/page';
-import { supabase } from "../../lib/supabase";
+import Link from "next/link";
+
+import Header from "@/app/components/header/page";
+import Head from "@/app/components/head/page";
+import Navbar from "@/app/components/navbar/page";
+import Footer from "@/app/components/footer/page";
+import { supabase } from "@/app/lib/supabase";
+
 import {
   BiSolidHeart,
   BiBed,
@@ -17,22 +20,25 @@ function ImovelCard({ imovel }) {
   const [favorito, setFavorito] = useState(false);
 
   return (
-    <div className="group w-full max-w-sm border border-gray-400 rounded-3xl shadow-sm text-center flex flex-col items-center overflow-hidden">
+    <div className="group w-full max-w-sm border border-gray-400 rounded-3xl shadow-sm text-center flex flex-col items-center overflow-hidden bg-white">
       <div className="relative w-full mb-4">
-        {imovel.img_url ? (
-          <Image
-            src={imovel.img_url}
-            alt={imovel.titulo}
-            width={400}
-            height={260}
-            className="rounded-t-3xl w-full h-[260px] object-cover transition-transform duration-300 group-hover:scale-105"
-          />
-        ) : (
-          <div className="rounded-t-3xl w-full h-[260px] bg-gray-200 flex items-center justify-center text-gray-500">
-            Sem imagem
-          </div>
-        )}
-        <span className="absolute top-3 right-3 bg-[#F29829] text-sm px-3 py-1 rounded-full capitalize">
+        <Link href={`/imovel/${imovel.id}`}>
+          {imovel.img_url ? (
+            <Image
+              src={imovel.img_url}
+              alt={imovel.titulo}
+              width={400}
+              height={260}
+              className="rounded-t-3xl w-full h-[260px] object-cover transition-transform duration-300 group-hover:scale-105 cursor-pointer"
+            />
+          ) : (
+            <div className="rounded-t-3xl w-full h-[260px] bg-gray-200 flex items-center justify-center text-gray-500 cursor-pointer">
+              Sem imagem
+            </div>
+          )}
+        </Link>
+        
+        <span className="absolute top-3 right-3 bg-[#F29829] text-sm px-3 py-1 rounded-full text-white capitalize">
           {imovel.finalidade}
         </span>
 
@@ -44,13 +50,19 @@ function ImovelCard({ imovel }) {
         </button>
       </div>
 
-      <h3 className="font-bold">{imovel.titulo}</h3>
-      <p className="italic">
+      <Link href={`/imovel/${imovel.id}`}>
+        <h3 className="font-bold text-xl px-2 hover:text-[#F29829] transition-colors duration-200 cursor-pointer">
+          {imovel.titulo}
+        </h3>
+      </Link>
+
+      <p className="italic text-lg font-semibold mt-1">
         R$ {Number(imovel.preco_aluguel).toLocaleString("pt-BR", { minimumFractionDigits: 2 })}/mês
       </p>
-      <span className="text-sm">{imovel.bairro}, {imovel.cidade} - {imovel.estado}</span>
+      
+      <span className="text-sm text-gray-600 mb-2">{imovel.bairro}, {imovel.cidade} - {imovel.estado}</span>
 
-      <ul className="flex gap-4 justify-center items-center w-full bg-[#F2C894] mt-4 p-4 rounded-b-3xl">
+      <ul className="flex gap-4 justify-center items-center w-full bg-[#F2C894] mt-auto p-4 rounded-b-3xl">
         {imovel.quartos > 0 && (
           <li className="flex flex-col items-center gap-1 text-xs font-bold">
             <BiBed size={20} /> {imovel.quartos} {imovel.quartos === 1 ? "Dormitório" : "Dormitórios"}
@@ -110,7 +122,7 @@ export default function Locacao() {
 
       <div className="flex flex-col items-center py-16">
         <h2 className="text-4xl font-bold text-center">Locação</h2>
-        <p className="text-xl font-bold text-center">Confira nossos imóveis disponíveis para locação</p>
+        <p className="text-xl font-bold text-center text-gray-600 mt-2">Confira nossos imóveis disponíveis para locação</p>
         <span className="block mt-2 h-1.5 w-48 bg-[#F29829] rounded-full" />
       </div>
 
@@ -126,7 +138,7 @@ export default function Locacao() {
         </div>
       )}
 
-      <br /><br />
+      <div className="py-12" />
 
       <Footer />
     </>
