@@ -1,10 +1,11 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import Header from '@/app/components/header/page';
 import Head from '../../components/head/page';
 import Navbar from '../../components/navbar/page';
 import Footer from '@/app/components/footer/page';
+import { supabase } from "../../lib/supabase";
 import {
   BiSolidHeart,
   BiBed,
@@ -12,27 +13,27 @@ import {
   BiArea,
 } from "react-icons/bi";
 
-const imoveis = [
-  { id: 4, titulo: "Apartamento", tipo: "Aluguel", preco: "R$ 3.500,00/mês", local: "Centro, São Lourenço - MG", dormitorios: 3, banheiros: 1, area: "89,00m²", img: "/imoveis1.png" },
-  { id: 5, titulo: "Apartamento", tipo: "Aluguel", preco: "R$ 3.500,00/mês", local: "Centro, São Lourenço - MG", dormitorios: 3, banheiros: 1, area: "89,00m²", img: "/imoveis1.png" },
-  { id: 6, titulo: "Apartamento", tipo: "Aluguel", preco: "R$ 3.500,00/mês", local: "Centro, São Lourenço - MG", dormitorios: 3, banheiros: 1, area: "89,00m²", img: "/imoveis1.png" },
-  { id: 12, titulo: "Apartamento", tipo: "Aluguel", preco: "R$ 3.500,00/mês", local: "Centro, São Lourenço - MG", dormitorios: 3, banheiros: 1, area: "89,00m²", img: "/imoveis1.png" },
-];
-
 function ImovelCard({ imovel }) {
   const [favorito, setFavorito] = useState(false);
+
   return (
     <div className="group w-full max-w-sm border border-gray-400 rounded-3xl shadow-sm text-center flex flex-col items-center overflow-hidden">
       <div className="relative w-full mb-4">
-        <Image
-          src={imovel.img}
-          alt={imovel.titulo}
-          width={400}
-          height={400}
-          className="rounded-t-3xl w-full transition-transform duration-300 group-hover:scale-105"
-        />
-        <span className="absolute top-3 right-3 bg-[#F29829] text-sm px-3 py-1 rounded-full">
-          {imovel.tipo}
+        {imovel.img_url ? (
+          <Image
+            src={imovel.img_url}
+            alt={imovel.titulo}
+            width={400}
+            height={260}
+            className="rounded-t-3xl w-full h-[260px] object-cover transition-transform duration-300 group-hover:scale-105"
+          />
+        ) : (
+          <div className="rounded-t-3xl w-full h-[260px] bg-gray-200 flex items-center justify-center text-gray-500">
+            Sem imagem
+          </div>
+        )}
+        <span className="absolute top-3 right-3 bg-[#F29829] text-sm px-3 py-1 rounded-full capitalize">
+          {imovel.finalidade}
         </span>
 
         <button
@@ -41,31 +42,66 @@ function ImovelCard({ imovel }) {
         >
           <BiSolidHeart size={20} className={favorito ? "text-red-500" : "text-gray-400"} />
         </button>
-
       </div>
+
       <h3 className="font-bold">{imovel.titulo}</h3>
-      <p className="italic">{imovel.preco}</p>
-      <span className="text-sm">{imovel.local}</span>
+      <p className="italic">
+        R$ {Number(imovel.preco_aluguel).toLocaleString("pt-BR", { minimumFractionDigits: 2 })}/mês
+      </p>
+      <span className="text-sm">{imovel.bairro}, {imovel.cidade} - {imovel.estado}</span>
+
       <ul className="flex gap-4 justify-center items-center w-full bg-[#F2C894] mt-4 p-4 rounded-b-3xl">
-        {imovel.dormitorios > 0 && (
+        {imovel.quartos > 0 && (
           <li className="flex flex-col items-center gap-1 text-xs font-bold">
-            <BiBed size={20} /> {imovel.dormitorios} Dormitórios
+            <BiBed size={20} /> {imovel.quartos} {imovel.quartos === 1 ? "Dormitório" : "Dormitórios"}
           </li>
         )}
         {imovel.banheiros > 0 && (
           <li className="flex flex-col items-center gap-1 text-xs font-bold">
-            <BiBath size={20} /> {imovel.banheiros} Banheiros
+            <BiBath size={20} /> {imovel.banheiros} {imovel.banheiros === 1 ? "Banheiro" : "Banheiros"}
           </li>
         )}
         <li className="flex flex-col items-center gap-1 text-xs font-bold">
-          <BiArea size={20} /> Área: {imovel.area}
+          <BiArea size={20} /> Área: {imovel.area_construida}m²
         </li>
       </ul>
     </div>
   );
 }
 
-export default function Vendas() {
+export default function Locacao() {
+  const [imoveis, setImoveis] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchImoveis() {
+      const { data, error } = await supabase
+        .from("imoveis")
+        .select(`
+          id, titulo, finalidade, preco_venda, preco_aluguel,
+          bairro, cidade, estado, quartos, banheiros, area_construida,
+          status, created_at,
+          imovel_imagens (url, capa)
+        `)
+        .eq("status", "disponivel")
+        .ilike("finalidade", "%aluguel%")
+        .order("created_at", { ascending: false });
+
+      if (error) {
+        console.error("Erro Supabase:", error.message);
+      } else {
+        const imoveisComImg = data.map((imovel) => {
+          const capa = imovel.imovel_imagens?.find((img) => img.capa) || imovel.imovel_imagens?.[0];
+          return { ...imovel, img_url: capa?.url || null };
+        });
+        setImoveis(imoveisComImg);
+      }
+      setLoading(false);
+    }
+
+    fetchImoveis();
+  }, []);
+
   return (
     <>
       <Head />
@@ -78,11 +114,17 @@ export default function Vendas() {
         <span className="block mt-2 h-1.5 w-48 bg-[#F29829] rounded-full" />
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 justify-items-center gap-6 max-w-6xl mx-auto">
-        {imoveis.map((imovel) => (
-          <ImovelCard key={imovel.id} imovel={imovel} />
-        ))}
-      </div>
+      {loading ? (
+        <p className="text-center py-12 text-gray-500">Carregando imóveis para locação...</p>
+      ) : imoveis.length === 0 ? (
+        <p className="text-center py-12 text-gray-500">Nenhum imóvel para locação disponível no momento.</p>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-3 justify-items-center gap-6 max-w-6xl mx-auto">
+          {imoveis.map((imovel) => (
+            <ImovelCard key={imovel.id} imovel={imovel} />
+          ))}
+        </div>
+      )}
 
       <br /><br />
 
