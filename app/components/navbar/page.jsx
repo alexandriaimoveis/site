@@ -70,36 +70,35 @@ export default function Navbar() {
           </ul>
         </nav>
 
-        {/* REDES SOCIAIS */}
         <div className="flex items-center justify-center space-x-2">
           <a
-            href="https://facebook.com"
+            href="https://www.facebook.com/profile.php?id=61579537775246" target="_blank"
             className="flex h-7 w-7 items-center justify-center rounded-full border border-gray-300 text-xs text-gray-600 hover:bg-[#F29829] hover:text-white ease-in-out duration-300"
             aria-label="Facebook"
           >
             <BsFacebook size={12} />
           </a>
           <a
-            href="https://instagram.com"
+            href="https://www.instagram.com/alexandrianegociosimobiliarios/" target="_blank"
             className="flex h-7 w-7 items-center justify-center rounded-full border border-gray-300 text-xs text-gray-600 hover:bg-[#F29829] hover:text-white ease-in-out duration-300"
             aria-label="Instagram"
           >
             <BsInstagram size={12} />
           </a>
-          <a
+          {/* <a
             href="https://google.com"
             className="flex h-7 w-7 items-center justify-center rounded-full border border-gray-300 text-xs text-gray-600 hover:bg-[#F29829] hover:text-white ease-in-out duration-300"
             aria-label="Google"
           >
             <BsGoogle size={12} />
-          </a>
-          <a
+          </a> */}
+          {/* <a
             href="https://youtube.com"
             className="flex h-7 w-7 items-center justify-center rounded-full border border-gray-300 text-xs text-gray-600 hover:bg-[#F29829] hover:text-white ease-in-out duration-300"
             aria-label="Youtube"
           >
             <BsYoutube size={12} />
-          </a>
+          </a> */}
         </div>
       </section>
     </header>
