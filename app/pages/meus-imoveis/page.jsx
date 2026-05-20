@@ -61,7 +61,6 @@ export default function MeusImoveis() {
   const [imoveis, setImoveis] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Função para carregar dados
   async function fetchMeusImoveis() {
     const clienteId = localStorage.getItem("alexandria_cliente_id");
     if (!clienteId) {
@@ -90,11 +89,7 @@ export default function MeusImoveis() {
     setLoading(false);
   }
 
-  // REMOVA a chamada de fetchMeusImoveis() que está solta no corpo do componente (linha 94)
-
   useEffect(() => {
-    // Defina a função dentro do useEffect ou mantenha-a fora
-    // se ela não depender de nada externo ao componente.
     async function fetchMeusImoveis() {
       const clienteId = localStorage.getItem("alexandria_cliente_id");
       if (!clienteId) {
@@ -102,7 +97,7 @@ export default function MeusImoveis() {
         return;
       }
 
-      setLoading(true); // Garante que o loading comece verdadeiro
+      setLoading(true);
 
       const { data, error } = await supabase
         .from("imoveis")
@@ -123,11 +118,11 @@ export default function MeusImoveis() {
         });
         setImoveis(imoveisFormatados);
       }
-      setLoading(false); // Finaliza o loading
+      setLoading(false);
     }
 
     fetchMeusImoveis();
-  }, [router]); // O array de dependências controla quando isso roda
+  }, [router]);
 
   const handleDelete = async (id) => {
     if (!confirm("Tem certeza que deseja excluir este imóvel? Esta ação não pode ser desfeita.")) return;
@@ -141,7 +136,6 @@ export default function MeusImoveis() {
       alert("Erro ao excluir: " + error.message);
     } else {
       alert("Imóvel excluído com sucesso!");
-      // Atualiza a lista após excluir
       setImoveis(imoveis.filter((i) => i.id !== id));
     }
   };
