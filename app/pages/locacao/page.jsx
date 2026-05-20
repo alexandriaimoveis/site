@@ -19,6 +19,52 @@ import {
 function ImovelCard({ imovel }) {
   const [favorito, setFavorito] = useState(false);
 
+  useEffect(() => {
+    async function checarFavorito() {
+      const clienteId = localStorage.getItem("alexandria_cliente_id");
+      if (!clienteId) return;
+
+      const { data, error } = await supabase
+        .from("favoritos")
+        .select("id")
+        .eq("cliente_id", Number(clienteId))
+        .eq("imovel_id", imovel.id)
+        .maybeSingle();
+
+      if (data && !error) {
+        setFavorito(true);
+      }
+    }
+    checarFavorito();
+  }, [imovel.id]);
+
+  const handleLikeClick = async () => {
+    const clienteId = localStorage.getItem("alexandria_cliente_id");
+
+    if (!clienteId) {
+      alert("Por favor, faça seu cadastro para favoritar imóveis!");
+      return;
+    }
+
+    if (!favorito) {
+      const { error } = await supabase
+        .from("favoritos")
+        .insert([{ cliente_id: Number(clienteId), imovel_id: imovel.id }]);
+      
+      if (!error) setFavorito(true);
+      else console.error("Erro ao favoritar:", error.message);
+    } else {
+      const { error } = await supabase
+        .from("favoritos")
+        .delete()
+        .eq("cliente_id", Number(clienteId))
+        .eq("imovel_id", imovel.id);
+
+      if (!error) setFavorito(false);
+      else console.error("Erro ao remover favorito:", error.message);
+    }
+  };
+
   return (
     <div className="group w-full max-w-sm border border-gray-400 rounded-3xl shadow-sm text-center flex flex-col items-center overflow-hidden bg-white">
       <div className="relative w-full mb-4">
@@ -43,7 +89,7 @@ function ImovelCard({ imovel }) {
         </span>
 
         <button
-          onClick={() => setFavorito(!favorito)}
+          onClick={handleLikeClick}
           className="absolute top-3 left-3 bg-white p-2 rounded-full shadow-md transition-transform duration-200 hover:scale-110"
         >
           <BiSolidHeart size={20} className={favorito ? "text-red-500" : "text-gray-400"} />
@@ -131,7 +177,7 @@ export default function Locacao() {
       ) : imoveis.length === 0 ? (
         <p className="text-center py-12 text-gray-500">Nenhum imóvel para locação disponível no momento.</p>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-3 justify-items-center gap-6 max-w-6xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-3 justify-items-center gap-6 max-w-6xl mx-auto px-4">
           {imoveis.map((imovel) => (
             <ImovelCard key={imovel.id} imovel={imovel} />
           ))}

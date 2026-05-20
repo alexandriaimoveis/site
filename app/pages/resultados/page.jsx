@@ -2,6 +2,7 @@
 import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Image from "next/image";
+import Link from "next/link";
 import Header from '@/app/components/header/page';
 import Head from '../../components/head/page';
 import Navbar from '../../components/navbar/page';
@@ -17,43 +18,97 @@ import {
 function ImovelCard({ imovel }) {
   const [favorito, setFavorito] = useState(false);
 
+  useEffect(() => {
+    async function checarFavorito() {
+      const clienteId = localStorage.getItem("alexandria_cliente_id");
+      if (!clienteId) return;
+
+      const { data, error } = await supabase
+        .from("favoritos")
+        .select("id")
+        .eq("cliente_id", Number(clienteId))
+        .eq("imovel_id", imovel.id)
+        .maybeSingle();
+
+      if (data && !error) {
+        setFavorito(true);
+      }
+    }
+    checarFavorito();
+  }, [imovel.id]);
+
+  const handleLikeClick = async () => {
+    const clienteId = localStorage.getItem("alexandria_cliente_id");
+
+    if (!clienteId) {
+      alert("Por favor, faça seu cadastro para favoritar imóveis!");
+      return;
+    }
+
+    if (!favorito) {
+      const { error } = await supabase
+        .from("favoritos")
+        .insert([{ cliente_id: Number(clienteId), imovel_id: imovel.id }]);
+      
+      if (!error) setFavorito(true);
+      else console.error("Erro ao favoritar:", error.message);
+    } else {
+      const { error } = await supabase
+        .from("favoritos")
+        .delete()
+        .eq("cliente_id", Number(clienteId))
+        .eq("imovel_id", imovel.id);
+
+      if (!error) setFavorito(false);
+      else console.error("Erro ao remover favorito:", error.message);
+    }
+  };
+
   const exibirPreco = imovel.finalidade?.toLowerCase().includes("aluguel")
     ? `${Number(imovel.preco_aluguel).toLocaleString("pt-BR", { minimumFractionDigits: 2 })}/mês`
     : Number(imovel.preco_venda).toLocaleString("pt-BR", { minimumFractionDigits: 2 });
 
   return (
-    <div className="group w-full max-w-sm border border-gray-400 rounded-3xl shadow-sm text-center flex flex-col items-center overflow-hidden">
+    <div className="group w-full max-w-sm border border-gray-400 rounded-3xl shadow-sm text-center flex flex-col items-center overflow-hidden bg-white">
       <div className="relative w-full mb-4">
-        {imovel.img_url ? (
-          <Image
-            src={imovel.img_url}
-            alt={imovel.titulo}
-            width={400}
-            height={260}
-            className="rounded-t-3xl w-full h-[260px] object-cover transition-transform duration-300 group-hover:scale-105"
-          />
-        ) : (
-          <div className="rounded-t-3xl w-full h-[260px] bg-gray-200 flex items-center justify-center text-gray-500">
-            Sem imagem
-          </div>
-        )}
-        <span className="absolute top-3 right-3 bg-[#F29829] text-sm px-3 py-1 rounded-full capitalize">
+        <Link href={`/imovel/${imovel.id}`}>
+          {imovel.img_url ? (
+            <Image
+              src={imovel.img_url}
+              alt={imovel.titulo}
+              width={400}
+              height={260}
+              className="rounded-t-3xl w-full h-[260px] object-cover transition-transform duration-300 group-hover:scale-105 cursor-pointer"
+            />
+          ) : (
+            <div className="rounded-t-3xl w-full h-[260px] bg-gray-200 flex items-center justify-center text-gray-500 cursor-pointer">
+              Sem imagem
+            </div>
+          )}
+        </Link>
+        
+        <span className="absolute top-3 right-3 bg-[#F29829] text-sm px-3 py-1 rounded-full text-white capitalize">
           {imovel.finalidade}
         </span>
 
         <button
-          onClick={() => setFavorito(!favorito)}
+          onClick={handleLikeClick}
           className="absolute top-3 left-3 bg-white p-2 rounded-full shadow-md transition-transform duration-200 hover:scale-110"
         >
           <BiSolidHeart size={20} className={favorito ? "text-red-500" : "text-gray-400"} />
         </button>
       </div>
 
-      <h3 className="font-bold">{imovel.titulo}</h3>
-      <p className="italic">R$ {exibirPreco}</p>
-      <span className="text-sm">{imovel.bairro}, {imovel.cidade} - {imovel.estado}</span>
+      <Link href={`/imovel/${imovel.id}`}>
+        <h3 className="font-bold text-xl px-2 hover:text-[#F29829] transition-colors duration-200 cursor-pointer">
+          {imovel.titulo}
+        </h3>
+      </Link>
+      
+      <p className="italic text-lg font-semibold mt-1">R$ {exibirPreco}</p>
+      <span className="text-sm text-gray-600 mb-2">{imovel.bairro}, {imovel.cidade} - {imovel.estado}</span>
 
-      <ul className="flex gap-4 justify-center items-center w-full bg-[#F2C894] mt-4 p-4 rounded-b-3xl">
+      <ul className="flex gap-4 justify-center items-center w-full bg-[#F2C894] mt-auto p-4 rounded-b-3xl">
         {imovel.quartos > 0 && (
           <li className="flex flex-col items-center gap-1 text-xs font-bold">
             <BiBed size={20} /> {imovel.quartos} {imovel.quartos === 1 ? "Dormitório" : "Dormitórios"}
@@ -109,7 +164,6 @@ function ResultadosContent() {
       const banheiros = searchParams.get("banheiros");
       if (banheiros) query = query.gte("banheiros", parseInt(banheiros));
 
-      // Filtro de preço máximo aplicado na coluna correspondente
       const precoMax = searchParams.get("precoMax");
       if (precoMax) {
         const precoNum = parseFloat(precoMax);
@@ -129,7 +183,11 @@ function ResultadosContent() {
       } else {
         const imoveisComImg = data.map((imovel) => {
           const capa = imovel.imovel_imagens?.find((img) => img.capa) || imovel.imovel_imagens?.[0];
-          return { ...imovel, img_url: capa?.url || null };
+          return { 
+            ...imovel, 
+            cidade: imovel.city,
+            img_url: capa?.url || null 
+          };
         });
         setImoveis(imoveisComImg);
       }
@@ -156,7 +214,7 @@ function ResultadosContent() {
           <p className="text-gray-500 mb-4">Nenhum imóvel corresponde aos critérios da sua busca.</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-3 justify-items-center gap-6 max-w-6xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-3 justify-items-center gap-6 max-w-6xl mx-auto px-4">
           {imoveis.map((imovel) => (
             <ImovelCard key={imovel.id} imovel={imovel} />
           ))}
@@ -177,7 +235,7 @@ export default function Resultados() {
         <ResultadosContent />
       </Suspense>
 
-      <br /><br />
+      <div className="py-12" />
       <Footer />
     </>
   );

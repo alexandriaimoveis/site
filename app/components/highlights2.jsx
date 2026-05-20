@@ -3,11 +3,58 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { BiSolidHeart, BiBed, BiBath, BiArea } from "react-icons/bi";
-import { supabase } from "../lib/supabase";
+import { supabase } from "@/app/lib/supabase";
 
 function ImovelCard({ imovel }) {
   const [favorito, setFavorito] = useState(false);
-  
+
+  useEffect(() => {
+    async function checarFavorito() {
+      const clienteId = localStorage.getItem("alexandria_cliente_id");
+      if (!clienteId) return;
+
+      const { data, error } = await supabase
+        .from("favoritos")
+        .select("id")
+        .eq("cliente_id", Number(clienteId))
+        .eq("imovel_id", imovel.id)
+        .maybeSingle();
+
+      if (data && !error) {
+        setFavorito(true);
+      }
+    }
+    checarFavorito();
+  }, [imovel.id]);
+
+  // Gerencia o clique no coração de favoritos
+  const handleLikeClick = async () => {
+    const clienteId = localStorage.getItem("alexandria_cliente_id");
+
+    if (!clienteId) {
+      alert("Por favor, faça seu cadastro para favoritar imóveis!");
+      return;
+    }
+
+    if (!favorito) {
+      const { error } = await supabase
+        .from("favoritos")
+        .insert([{ cliente_id: Number(clienteId), imovel_id: imovel.id }]);
+      
+      if (!error) setFavorito(true);
+      else console.error("Erro ao favoritar:", error.message);
+    } else {
+      const { error } = await supabase
+        .from("favoritos")
+        .delete()
+        .eq("cliente_id", Number(clienteId))
+        .eq("imovel_id", imovel.id);
+
+      if (!error) setFavorito(false);
+      else console.error("Erro ao remover favorito:", error.message);
+    }
+  };
+
   const precoFinal = imovel.finalidade?.toLowerCase() === "venda" 
     ? imovel.preco_venda 
     : imovel.preco_aluguel;
@@ -35,7 +82,7 @@ function ImovelCard({ imovel }) {
           {imovel.finalidade}
         </span>
         <button
-          onClick={() => setFavorito(!favorito)}
+          onClick={handleLikeClick}
           className="absolute top-3 left-3 bg-white p-2 rounded-full shadow-md transition-transform duration-200 hover:scale-110"
         >
           <BiSolidHeart size={20} className={favorito ? "text-red-500" : "text-gray-400"} />
@@ -100,7 +147,11 @@ export default function HighLights() {
         
         const imoveisComImg = data.map((imovel) => {
           const capa = imovel.imovel_imagens?.find((img) => img.capa) || imovel.imovel_imagens?.[0];
-          return { ...imovel, img_url: capa?.url || null };
+          return { 
+            ...imovel, 
+            cidade: imovel.city,
+            img_url: capa?.url || null 
+          };
         });
         setImoveis(imoveisComImg);
       }

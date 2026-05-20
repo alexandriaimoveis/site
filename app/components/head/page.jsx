@@ -1,14 +1,29 @@
+"use client";
+import { useState, useEffect } from "react";
 import {
   BsHeart,
   BsHouseAdd,
   BsHouseCheck,
   BsLock,
   BsPerson,
+  BsPersonCheck,
 } from "react-icons/bs";
-
 import Link from "next/link";
 
 export default function Head() {
+  const [clienteNome, setClienteNome] = useState("");
+
+  useEffect(() => {
+    const nomeSalvo = localStorage.getItem("alexandria_cliente_nome");
+    if (nomeSalvo) {
+      const primeiroNome = nomeSalvo.split(" ")[0];
+      
+      setTimeout(() => {
+        setClienteNome(primeiroNome);
+      }, 0);
+    }
+  }, []);
+
   return (
     <section
       className="shadow-md"
@@ -61,11 +76,20 @@ export default function Head() {
           </li>
         </Link>
 
-        <Link href="/pages/login">
+        <Link href={clienteNome ? "/pages/meu-perfil" : "/cadastro"}>
           <li className="w-full xs:w-auto sm:w-auto">
             <span className="flex items-center justify-center gap-2 px-4 py-2 bg-[#F29829] hover:bg-[#1F3445] hover:text-white ease-in-out duration-300 cursor-pointer">
-              <BsLock />
-              Login / Cadastro&nbsp;
+              {clienteNome ? (
+                <>
+                  <BsPersonCheck size={14} />
+                  Olá, {clienteNome}&nbsp;
+                </>
+              ) : (
+                <>
+                  <BsLock />
+                  Login / Cadastro&nbsp;
+                </>
+              )}
             </span>
           </li>
         </Link>
