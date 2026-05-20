@@ -125,7 +125,7 @@ export default function MeuPerfil() {
       <Header />
       <Navbar />
 
-      <main className="min-h-screen bg-gray-100 py-16 text-black flex flex-col items-center px-4">
+      <main className="min-h-screen py-16 text-black flex flex-col items-center px-4">
         <div className="flex flex-col items-center mb-8">
           <h1 className="text-4xl font-bold text-center">Meu Perfil</h1>
           <p className="text-gray-600 text-center mt-2">
