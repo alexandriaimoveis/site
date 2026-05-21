@@ -88,7 +88,7 @@ function EdicaoContent() {
       }
 
       alert("Imóvel atualizado com sucesso!");
-      router.push("/meus-imoveis");
+      router.push("/pages/meus-imoveis");
     } catch (err) {
       alert("Erro ao salvar: " + err.message);
     } finally {
