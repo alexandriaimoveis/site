@@ -1,4 +1,5 @@
 "use client";
+
 import { useState, useEffect, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { supabase } from "@/app/lib/supabase";
@@ -6,7 +7,7 @@ import Header from "@/app/components/header/page";
 import Head from "@/app/components/head/page";
 import Navbar from "@/app/components/navbar/page";
 import Footer from "@/app/components/footer/page";
-import { BiTrash } from "react-icons/bi";
+import { BiImageAdd, BiSave, BiLoaderAlt } from "react-icons/bi";
 
 function EdicaoContent() {
   const searchParams = useSearchParams();
@@ -60,7 +61,6 @@ function EdicaoContent() {
     setSaving(true);
 
     try {
-      // 1. Atualiza textos
       const { error: updateError } = await supabase
         .from("imoveis")
         .update({ 
@@ -88,7 +88,7 @@ function EdicaoContent() {
       }
 
       alert("Imóvel atualizado com sucesso!");
-      router.push("/pages/meus-imoveis");
+      router.push("/meus-imoveis");
     } catch (err) {
       alert("Erro ao salvar: " + err.message);
     } finally {
@@ -96,64 +96,135 @@ function EdicaoContent() {
     }
   };
 
-  if (loading) return <div className="text-center py-20">Carregando...</div>;
+  if (loading) {
+    return (
+      <div className="flex flex-col items-center justify-center py-20 space-y-3 flex-grow">
+        <BiLoaderAlt size={32} className="text-[#F29829] animate-spin" />
+        <p className="text-sm text-slate-500 font-medium">Buscando detalhes do imóvel...</p>
+      </div>
+    );
+  }
 
   return (
-    <div className="max-w-xl mx-auto bg-white p-8 rounded-3xl border border-gray-300 mt-10 mb-20 shadow-sm">
-      <h2 className="text-2xl font-bold mb-6 text-center">Editar Imóvel</h2>
-      
-      <form onSubmit={handleSave} className="space-y-4">
-        <div>
-          <label className="text-xs font-semibold uppercase">Título</label>
-          <input className="w-full p-3 border rounded-md" value={form.titulo} onChange={e => setForm({ ...form, titulo: e.target.value })} />
-        </div>
-        <div>
-          <label className="text-xs font-semibold uppercase">Preço (R$)</label>
-          <input className="w-full p-3 border rounded-md" type="number" value={form.preco_venda} onChange={e => setForm({ ...form, preco_venda: e.target.value })} />
-        </div>
-        <div>
-          <label className="text-xs font-semibold uppercase">Descrição</label>
-          <textarea rows={4} className="w-full p-3 border rounded-md" value={form.descricao} onChange={e => setForm({ ...form, descricao: e.target.value })} />
-        </div>
-
-        <div>
-          <label className="text-xs font-semibold uppercase block mb-2">Fotos Atuais</label>
-          <div className="flex flex-wrap gap-2">
-            {existingImages.map(img => (
-              <img key={img.id} src={img.url} className="w-20 h-20 object-cover rounded-md border" />
-            ))}
+    <main className="flex-grow px-4 pb-20 w-full max-w-2xl mx-auto">
+      <div className="bg-white border border-slate-100 rounded-2xl shadow-md p-6 sm:p-8 transition-all duration-300">
+        <form onSubmit={handleSave} className="space-y-5">
+          
+          <div className="flex flex-col gap-1">
+            <label className="text-xs font-bold uppercase tracking-wider text-slate-500">Título do Anúncio</label>
+            <input 
+              required
+              className="h-12 w-full rounded-xl border border-slate-200 bg-slate-50/50 px-4 text-sm text-slate-800 outline-none transition-all focus:border-[#F29829] focus:bg-white focus:ring-1 focus:ring-[#F29829]" 
+              value={form.titulo} 
+              onChange={e => setForm({ ...form, titulo: e.target.value })} 
+            />
           </div>
-        </div>
 
-        <div>
-          <label className="text-xs font-semibold uppercase block mb-2">Adicionar Novas Fotos</label>
-          <div className="flex flex-wrap gap-2">
-            {newPreviews.map((url, i) => (
-              <img key={i} src={url} className="w-20 h-20 object-cover rounded-md border" />
-            ))}
-            <label className="w-20 h-20 border-2 border-dashed flex items-center justify-center cursor-pointer rounded-md">
-              <input type="file" multiple accept="image/*" className="hidden" onChange={handleFileChange} />
-              <span className="text-2xl text-gray-400">+</span>
+          <div className="flex flex-col gap-1">
+            <label className="text-xs font-bold uppercase tracking-wider text-slate-500">Preço de Venda (R$)</label>
+            <input 
+              required
+              type="number" 
+              className="h-12 w-full rounded-xl border border-slate-200 bg-slate-50/50 px-4 text-sm text-slate-800 outline-none transition-all focus:border-[#F29829] focus:bg-white focus:ring-1 focus:ring-[#F29829]" 
+              value={form.preco_venda} 
+              onChange={e => setForm({ ...form, preco_venda: e.target.value })} 
+            />
+          </div>
+
+          <div className="flex flex-col gap-1">
+            <label className="text-xs font-bold uppercase tracking-wider text-slate-500">Descrição Detalhada</label>
+            <textarea 
+              rows={4} 
+              required
+              className="w-full border border-slate-200 bg-slate-50/50 rounded-xl p-4 text-sm text-slate-800 outline-none transition-all focus:border-[#F29829] focus:bg-white focus:ring-1 focus:ring-[#F29829] resize-none" 
+              value={form.descricao} 
+              onChange={e => setForm({ ...form, descricao: e.target.value })} 
+            />
+          </div>
+
+          {existingImages.length > 0 && (
+            <div className="pt-2">
+              <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-3">
+                Fotos Cadastradas
+              </label>
+              <div className="grid grid-cols-4 sm:grid-cols-6 gap-3">
+                {existingImages.map(img => (
+                  <div key={img.id} className="relative aspect-square w-full rounded-xl overflow-hidden border border-slate-100 shadow-sm group">
+                    <img src={img.url} className="w-full h-full object-cover" alt="Foto do imóvel" />
+                    {img.capa && (
+                      <span className="absolute bottom-0 inset-x-0 bg-slate-900/70 text-[9px] text-white text-center py-0.5 uppercase font-bold tracking-wider">
+                        Capa
+                      </span>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          <div className="pt-2">
+            <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-3">
+              Adicionar Novas Fotos
             </label>
+            <div className="grid grid-cols-4 sm:grid-cols-6 gap-3">
+              {newPreviews.map((url, i) => (
+                <div key={i} className="relative aspect-square w-full rounded-xl overflow-hidden border border-slate-200 shadow-sm">
+                  <img src={url} className="w-full h-full object-cover" alt="Nova foto selecionada" />
+                </div>
+              ))}
+              
+              <label className="aspect-square w-full border-2 border-dashed border-slate-200 rounded-xl flex flex-col items-center justify-center cursor-pointer hover:border-[#F29829] hover:bg-amber-50/20 transition-all group shadow-sm">
+                <BiImageAdd size={24} className="text-slate-400 group-hover:text-[#F29829] transition-colors" />
+                <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wide mt-1 group-hover:text-[#F29829] transition-colors">Nova</span>
+                <input type="file" multiple accept="image/*" className="hidden" onChange={handleFileChange} />
+              </label>
+            </div>
           </div>
-        </div>
 
-        <button disabled={saving} className="w-full py-4 bg-[#F29829] text-white font-bold rounded-md hover:bg-[#1F3445] transition-colors">
-          {saving ? "Salvando..." : "SALVAR ALTERAÇÕES"}
-        </button>
-      </form>
-    </div>
+          <button 
+            type="submit"
+            disabled={saving} 
+            className="flex items-center justify-center gap-2 w-full h-12 mt-6 rounded-xl bg-[#F29829] hover:bg-[#1F3445] text-white font-bold uppercase tracking-widest text-xs transition-all duration-300 disabled:bg-slate-300 shadow-sm shadow-[#F29829]/20 cursor-pointer"
+          >
+            <BiSave size={18} />
+            {saving ? "Salvando Alterações..." : "Salvar Alterações"}
+          </button>
+        </form>
+      </div>
+    </main>
   );
 }
 
 export default function EditarImovel() {
   return (
-    <>
-      <Head /> <Header /> <Navbar />
-      <Suspense fallback={<div className="text-center py-20">Carregando...</div>}>
+    <div className="bg-slate-50 min-h-screen flex flex-col justify-between">
+      <Head /> 
+      <Header /> 
+      <Navbar />
+      
+      <div className="flex flex-col items-center py-16 text-center px-4">
+        <span className="text-[#F29829] font-bold uppercase tracking-[0.2em] text-xs mb-2 block">
+          Gerenciador
+        </span>
+        <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+          Editar Imóvel
+        </h2>
+        <p className="text-slate-500 text-sm sm:text-base mt-2 max-w-md leading-relaxed">
+          Modifique as informações principais ou adicione novos arquivos de mídia ao seu anúncio.
+        </p>
+        <span className="block mt-4 h-1 w-16 bg-[#F29829] rounded-full" />
+      </div>
+
+      <Suspense fallback={
+        <div className="flex flex-col items-center justify-center py-20 space-y-3 flex-grow">
+          <BiLoaderAlt size={32} className="text-[#F29829] animate-spin" />
+          <p className="text-sm text-slate-500 font-medium">Carregando formulário...</p>
+        </div>
+      }>
         <EdicaoContent />
       </Suspense>
+
       <Footer />
-    </>
+    </div>
   );
 }

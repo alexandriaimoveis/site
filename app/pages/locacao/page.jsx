@@ -66,61 +66,70 @@ function ImovelCard({ imovel }) {
   };
 
   return (
-    <div className="group w-full max-w-sm border border-gray-400 rounded-3xl shadow-sm text-center flex flex-col items-center overflow-hidden bg-white">
-      <div className="relative w-full mb-4">
+    <div className="group w-full max-w-sm rounded-2xl shadow-md hover:shadow-2xl border border-slate-100 flex flex-col overflow-hidden bg-white transition-all duration-300 hover:-translate-y-1.5">
+      
+      <div className="relative w-full overflow-hidden h-[250px]">
         <Link href={`/imovel/${imovel.id}`}>
           {imovel.img_url ? (
             <Image
               src={imovel.img_url}
               alt={imovel.titulo}
               width={400}
-              height={260}
-              className="rounded-t-3xl w-full h-[260px] object-cover transition-transform duration-300 group-hover:scale-105 cursor-pointer"
+              height={250}
+              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 cursor-pointer"
             />
           ) : (
-            <div className="rounded-t-3xl w-full h-[260px] bg-gray-200 flex items-center justify-center text-gray-500 cursor-pointer">
-              Sem imagem
+            <div className="w-full h-full bg-slate-100 flex items-center justify-center text-slate-400 cursor-pointer text-sm font-medium">
+              Sem imagem disponível
             </div>
           )}
         </Link>
         
-        <span className="absolute top-3 right-3 bg-[#F29829] text-sm px-3 py-1 rounded-full text-white capitalize">
+        <span className="absolute top-4 right-4 bg-[#F29829] text-[10px] font-bold tracking-wider uppercase px-3 py-1.5 rounded-lg text-white shadow-sm">
           {imovel.finalidade}
         </span>
 
         <button
           onClick={handleLikeClick}
-          className="absolute top-3 left-3 bg-white p-2 rounded-full shadow-md transition-transform duration-200 hover:scale-110"
+          className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm p-2 rounded-xl shadow-md transition-all duration-300 hover:bg-white hover:scale-110"
         >
-          <BiSolidHeart size={20} className={favorito ? "text-red-500" : "text-gray-400"} />
+          <BiSolidHeart size={18} className={favorito ? "text-red-500" : "text-slate-400/80"} />
         </button>
       </div>
 
-      <Link href={`/imovel/${imovel.id}`}>
-        <h3 className="font-bold text-xl px-2 hover:text-[#F29829] transition-colors duration-200 cursor-pointer">
-          {imovel.titulo}
-        </h3>
-      </Link>
+      <div className="p-5 flex flex-col flex-grow text-left">
+        <Link href={`/imovel/${imovel.id}`}>
+          <h3 className="font-extrabold text-lg text-slate-800 hover:text-[#F29829] transition-colors duration-200 cursor-pointer line-clamp-1 tracking-tight">
+            {imovel.titulo}
+          </h3>
+        </Link>
+        
+        <span className="text-xs font-semibold text-slate-400 mt-1 uppercase tracking-wide">
+          {imovel.bairro}, {imovel.cidade}
+        </span>
 
-      <p className="italic text-lg font-semibold mt-1">
-        R$ {Number(imovel.preco_aluguel).toLocaleString("pt-BR", { minimumFractionDigits: 2 })}/mês
-      </p>
+        <p className="text-[#1e293b] font-black text-xl mt-4 tracking-tight">
+          R$ {Number(imovel.preco_aluguel).toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
+          <span className="text-xs font-bold text-slate-400 tracking-normal font-sans ml-1">/mês</span>
+        </p>
+      </div>
       
-      <span className="text-sm text-gray-600 mb-2">{imovel.bairro}, {imovel.cidade} - {imovel.estado}</span>
-
-      <ul className="flex gap-4 justify-center items-center w-full bg-[#F2C894] mt-auto p-4 rounded-b-3xl">
+      <ul className="flex justify-between items-center w-full bg-slate-50 border-t border-slate-100/60 p-4 px-5 rounded-b-2xl text-slate-600">
         {imovel.quartos > 0 && (
-          <li className="flex flex-col items-center gap-1 text-xs font-bold">
-            <BiBed size={20} /> {imovel.quartos} {imovel.quartos === 1 ? "Dormitório" : "Dormitórios"}
+          <li className="flex items-center gap-1.5 text-xs font-bold">
+            <BiBed size={18} className="text-[#F29829]" />
+            <span>{imovel.quartos} {imovel.quartos === 1 ? "Quarto" : "Quartos"}</span>
           </li>
         )}
         {imovel.banheiros > 0 && (
-          <li className="flex flex-col items-center gap-1 text-xs font-bold">
-            <BiBath size={20} /> {imovel.banheiros} {imovel.banheiros === 1 ? "Banheiro" : "Banheiros"}
+          <li className="flex items-center gap-1.5 text-xs font-bold">
+            <BiBath size={17} className="text-[#F29829]" />
+            <span>{imovel.banheiros} {imovel.banheiros === 1 ? "Banho" : "Banhos"}</span>
           </li>
         )}
-        <li className="flex flex-col items-center gap-1 text-xs font-bold">
-          <BiArea size={20} /> Área: {imovel.area_construida}m²
+        <li className="flex items-center gap-1.5 text-xs font-bold">
+          <BiArea size={17} className="text-[#F29829]" />
+          <span>{imovel.area_construida}m²</span>
         </li>
       </ul>
     </div>
@@ -161,32 +170,48 @@ export default function Locacao() {
   }, []);
 
   return (
-    <>
-      <Head />
-      <Header />
-      <Navbar />
+    <div className="bg-slate-50 min-h-screen flex flex-col justify-between">
+      <div>
+        <Head />
+        <Header />
+        <Navbar />
 
-      <div className="flex flex-col items-center py-16">
-        <h2 className="text-4xl font-bold text-center">Locação</h2>
-        <p className="text-xl font-bold text-center text-gray-600 mt-2">Confira nossos imóveis disponíveis para locação</p>
-        <span className="block mt-2 h-1.5 w-48 bg-[#F29829] rounded-full" />
+        <section className="bg-white border-b border-slate-100 py-16">
+          <div className="max-w-6xl mx-auto px-6 text-center">
+            <span className="text-[#F29829] font-bold uppercase tracking-[0.2em] text-xs mb-3 block">
+              Aluguel de Confiança
+            </span>
+            <h1 className="text-4xl font-extrabold text-slate-900 tracking-tight">
+              Imóveis para Locação
+            </h1>
+            <p className="text-sm text-slate-500 font-medium max-w-md mx-auto mt-2">
+              Explore opções residenciais e comerciais selecionadas para locação imediata no Sul de Minas.
+            </p>
+            <span className="block mt-4 h-1 w-16 bg-[#F29829] rounded-full mx-auto" />
+          </div>
+        </section>
+
+        <main className="max-w-6xl mx-auto px-6 py-16">
+          {loading ? (
+            <div className="flex flex-col items-center justify-center py-12">
+              <div className="h-8 w-8 animate-spin rounded-full border-4 border-[#F29829] border-t-transparent" />
+              <p className="mt-4 text-sm font-semibold text-slate-400 uppercase tracking-wider">Buscando listagens...</p>
+            </div>
+          ) : imoveis.length === 0 ? (
+            <div className="text-center py-16 bg-white rounded-2xl border border-slate-100 p-8 shadow-sm">
+              <p className="text-slate-500 font-medium">Nenhum imóvel para locação disponível no momento.</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 justify-items-center">
+              {imoveis.map((imovel) => (
+                <ImovelCard key={imovel.id} imovel={imovel} />
+              ))}
+            </div>
+          )}
+        </main>
       </div>
 
-      {loading ? (
-        <p className="text-center py-12 text-gray-500">Carregando imóveis para locação...</p>
-      ) : imoveis.length === 0 ? (
-        <p className="text-center py-12 text-gray-500">Nenhum imóvel para locação disponível no momento.</p>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-3 justify-items-center gap-6 max-w-6xl mx-auto px-4">
-          {imoveis.map((imovel) => (
-            <ImovelCard key={imovel.id} imovel={imovel} />
-          ))}
-        </div>
-      )}
-
-      <div className="py-12" />
-
       <Footer />
-    </>
+    </div>
   );
 }

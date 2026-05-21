@@ -90,14 +90,20 @@ export default function Search() {
   };
 
   return (
-    <div className="w-full flex justify-center px-4 py-12">
-      <div className="w-full max-w-6xl rounded-xl bg-white px-6 py-6 text-black">
+    // Fundo neutro e suave para destacar o painel flutuante de busca avançada
+    <div className="w-full flex justify-center px-4 py-16 bg-slate-50">
+      <div className="w-full max-w-6xl rounded-2xl bg-white px-8 py-10 text-slate-800 shadow-xl border border-slate-100">
+        
+        {/* Cabeçalho Interno do Painel */}
         <div className="flex flex-col items-center mb-12">
-          <h2 className="text-4xl font-bold text-center">Busca Avançada</h2>
-          <span className="block mt-2 h-1.5 w-48 bg-[#F29829] rounded-full" />
+          <h2 className="text-4xl font-extrabold text-center text-slate-800 tracking-tight">
+            Busca Avançada
+          </h2>
+          <span className="block mt-3 h-1 w-24 bg-[#F29829] rounded-full" />
         </div>
 
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-5">
+        {/* Linha 1 de Filtros */}
+        <div className="grid grid-cols-1 gap-5 md:grid-cols-5">
           <SelectField
             label="Negócio"
             value={filters.finalidade}
@@ -130,7 +136,8 @@ export default function Search() {
           />
         </div>
 
-        <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
+        {/* Linha 2 de Filtros */}
+        <div className="mt-5 grid grid-cols-1 gap-5 md:grid-cols-2">
           <SelectField
             label="Dormitórios (Quartos)"
             value={filters.quartos}
@@ -145,14 +152,15 @@ export default function Search() {
           />
         </div>
 
-        <div className="mt-6 flex flex-col items-center gap-4 md:flex-row md:items-center md:justify-between">
+        {/* Linha Inferior: Controle de Preço e Ação */}
+        <div className="mt-8 flex flex-col items-center gap-6 md:flex-row md:items-end md:justify-between border-t border-slate-100 pt-6">
           <div className="w-full md:w-3/4">
-            <p className="mb-2 text-center text-xs font-semibold uppercase tracking-[0.15em] text-gray-600">
-              Preço Máximo: <span className="font-bold text-gray-900">{priceFormatter(filters.precoMax)}</span>
+            <p className="mb-3 text-center md:text-left text-xs font-bold uppercase tracking-wider text-slate-500">
+              Preço Máximo: <span className="text-slate-900 font-extrabold text-sm ml-1">{priceFormatter(filters.precoMax)}</span>
             </p>
 
             <div className="flex items-center gap-4">
-              <span className="text-xs text-gray-500">R$ 0,00</span>
+              <span className="text-xs font-medium text-slate-400">R$ 0,00</span>
               <input
                 type="range"
                 min={0}
@@ -162,16 +170,18 @@ export default function Search() {
                 onChange={(e) =>
                   handleChange("precoMax", Number(e.target.value))
                 }
-                className="h-1 w-full cursor-pointer appearance-none rounded-full bg-gray-200 accent-sky-600"
+                // Customizado com a cor institucional laranja/ouro
+                className="h-1.5 w-full cursor-pointer appearance-none rounded-full bg-slate-200 accent-[#F29829] transition-all"
               />
-              <span className="text-xs text-gray-500">{priceFormatter(maxPriceLimit)}</span>
+              <span className="text-xs font-medium text-slate-400">{priceFormatter(maxPriceLimit)}</span>
             </div>
           </div>
 
           <button
             type="button"
             onClick={handleSearch}
-            className="w-full md:w-auto rounded-md bg-[#F29829] hover:bg-[#1F3445] hover:text-white px-10 py-3 text-center text-sm font-semibold uppercase tracking-widest cursor-pointer ease-in-out duration-300"
+            // Botão com transição suave que casa com a cor escura premium do restante do site
+            className="w-full md:w-auto rounded-xl bg-[#F29829] hover:bg-[#1e293b] text-white px-12 h-12 text-center text-sm font-bold uppercase tracking-widest cursor-pointer shadow-md hover:shadow-lg transition-all duration-300"
           >
             Buscar
           </button>
@@ -183,14 +193,14 @@ export default function Search() {
 
 function SelectField({ label, value, options, onChange }) {
   return (
-    <div className="flex flex-col gap-1">
-      <label className="text-xs font-semibold uppercase tracking-[0.12em] text-gray-600">
+    <div className="flex flex-col gap-1.5">
+      <label className="text-xs font-bold uppercase tracking-wider text-slate-500">
         {label}
       </label>
       <select
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="h-9 rounded-md border border-gray-300 bg-white px-2 text-sm text-gray-900 outline-none focus:border-sky-600 focus:ring-1 focus:ring-sky-600"
+        className="h-10 rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-800 outline-none transition-all focus:border-[#F29829] focus:ring-1 focus:ring-[#F29829]"
       >
         <option value="">Todos</option>
         {options.map((opt) => (
@@ -205,15 +215,15 @@ function SelectField({ label, value, options, onChange }) {
 
 function InputField({ label, value, onChange, placeholder }) {
   return (
-    <div className="flex flex-col gap-1">
-      <label className="text-xs font-semibold uppercase tracking-[0.12em] text-gray-600">
+    <div className="flex flex-col gap-1.5">
+      <label className="text-xs font-bold uppercase tracking-wider text-slate-500">
         {label}
       </label>
       <input
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
-        className="h-9 rounded-md border border-gray-300 bg-white px-2 text-sm text-gray-900 outline-none placeholder:text-gray-400 focus:border-sky-600 focus:ring-1 focus:ring-sky-600"
+        className="h-10 rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-800 outline-none placeholder:text-slate-400 transition-all focus:border-[#F29829] focus:ring-1 focus:ring-[#F29829]"
       />
     </div>
   );

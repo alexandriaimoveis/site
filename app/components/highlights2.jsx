@@ -27,7 +27,6 @@ function ImovelCard({ imovel }) {
     checarFavorito();
   }, [imovel.id]);
 
-  // Gerencia o clique no coração de favoritos
   const handleLikeClick = async () => {
     const clienteId = localStorage.getItem("alexandria_cliente_id");
 
@@ -60,8 +59,9 @@ function ImovelCard({ imovel }) {
     : imovel.preco_aluguel;
 
   return (
-    <div className="group w-full max-w-sm border border-gray-400 rounded-3xl shadow-sm text-center flex flex-col items-center overflow-hidden bg-white">
-      <div className="relative w-full mb-4">
+    <div className="group w-full max-w-sm rounded-3xl shadow-md hover:shadow-xl border border-slate-100 text-center flex flex-col items-center overflow-hidden bg-white transition-all duration-300">
+      
+      <div className="relative w-full overflow-hidden h-[260px]">
         <Link href={`/imovel/${imovel.id}`}>
           {imovel.img_url ? (
             <Image
@@ -69,52 +69,60 @@ function ImovelCard({ imovel }) {
               alt={imovel.titulo}
               width={400}
               height={260}
-              className="rounded-t-3xl w-full h-[260px] object-cover transition-transform duration-300 group-hover:scale-105 cursor-pointer"
+              className="rounded-t-3xl w-full h-[260px] object-cover transition-transform duration-500 group-hover:scale-105 cursor-pointer"
             />
           ) : (
-            <div className="rounded-t-3xl w-full h-[260px] bg-gray-200 flex items-center justify-center text-gray-500 cursor-pointer">
+            <div className="rounded-t-3xl w-full h-[260px] bg-slate-100 flex items-center justify-center text-slate-400 cursor-pointer">
               Sem imagem
             </div>
           )}
         </Link>
         
-        <span className="absolute top-3 right-3 bg-[#F29829] text-sm px-3 py-1 rounded-full text-white capitalize">
+        <span className="absolute top-4 right-4 bg-[#F29829] text-xs font-bold uppercase tracking-wider px-3 py-1.5 rounded-full text-white shadow-sm">
           {imovel.finalidade}
         </span>
+        
         <button
           onClick={handleLikeClick}
-          className="absolute top-3 left-3 bg-white p-2 rounded-full shadow-md transition-transform duration-200 hover:scale-110"
+          className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm p-2.5 rounded-full shadow-md transition-all duration-200 hover:scale-110 text-slate-700 hover:bg-white"
         >
-          <BiSolidHeart size={20} className={favorito ? "text-red-500" : "text-gray-400"} />
+          <BiSolidHeart size={18} className={favorito ? "text-red-500" : "text-slate-400 transition-colors"} />
         </button>
       </div>
 
-      <Link href={`/imovel/${imovel.id}`}>
-        <h3 className="font-bold text-xl px-2 hover:text-[#F29829] transition-colors duration-200 cursor-pointer">
-          {imovel.titulo}
-        </h3>
-      </Link>
+      <div className="p-5 flex flex-col items-center w-full flex-1">
+        <Link href={`/imovel/${imovel.id}`}>
+          <h3 className="font-bold text-lg text-slate-800 line-clamp-1 hover:text-[#F29829] transition-colors duration-200 cursor-pointer">
+            {imovel.titulo}
+          </h3>
+        </Link>
 
-      <p className="italic text-lg font-semibold mt-1">
-        R$ {Number(precoFinal).toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
-        {imovel.finalidade?.toLowerCase() !== "venda" && "/mês"}
-      </p>
-      
-      <span className="text-sm text-gray-600 mb-2">{imovel.bairro}, {imovel.cidade} - {imovel.estado}</span>
+        <p className="text-xl font-extrabold text-slate-900 mt-2 tracking-tight">
+          R$ {Number(precoFinal).toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
+          {imovel.finalidade?.toLowerCase() !== "venda" && <span className="text-sm font-normal text-slate-500"> /mês</span>}
+        </p>
+        
+        <span className="text-xs font-medium text-slate-500 mt-2 mb-4 block tracking-wide">
+          {imovel.bairro}, {imovel.cidade} - {imovel.estado}
+        </span>
+      </div>
 
-      <ul className="flex gap-4 justify-center items-center w-full bg-[#F2C894] mt-auto p-4 rounded-b-3xl">
+      <ul className="flex gap-4 justify-around items-center w-full bg-slate-50 border-t border-slate-100 p-4 rounded-b-3xl text-slate-600">
         {imovel.quartos > 0 && (
-          <li className="flex flex-col items-center gap-1 text-xs font-bold">
-            <BiBed size={20} /> {imovel.quartos} {imovel.quartos === 1 ? "Dormitório" : "Dormitórios"}
+          <li className="flex flex-col items-center gap-1 text-[11px] font-semibold tracking-wide uppercase">
+            <BiBed size={18} className="text-[#F29829]" /> 
+            <span>{imovel.quartos} {imovel.quartos === 1 ? "Dormitório" : "Dormitórios"}</span>
           </li>
         )}
         {imovel.banheiros > 0 && (
-          <li className="flex flex-col items-center gap-1 text-xs font-bold">
-            <BiBath size={20} /> {imovel.banheiros} {imovel.banheiros === 1 ? "Banheiro" : "Banheiros"}
+          <li className="flex flex-col items-center gap-1 text-[11px] font-semibold tracking-wide uppercase">
+            <BiBath size={18} className="text-[#F29829]" /> 
+            <span>{imovel.banheiros} {imovel.banheiros === 1 ? "Banheiro" : "Banheiros"}</span>
           </li>
         )}
-        <li className="flex flex-col items-center gap-1 text-xs font-bold">
-          <BiArea size={20} /> Área: {imovel.area_construida}m²
+        <li className="flex flex-col items-center gap-1 text-[11px] font-semibold tracking-wide uppercase">
+          <BiArea size={18} className="text-[#F29829]" /> 
+          <span>Área: {imovel.area_construida}m²</span>
         </li>
       </ul>
     </div>
@@ -161,19 +169,21 @@ export default function HighLights() {
     fetchImoveis();
   }, []);
 
-  if (loading) return <p className="text-center py-12">Carregando imóveis...</p>;
+  if (loading) return <p className="text-center text-slate-500 font-medium py-16">Carregando imóveis...</p>;
 
   return (
-    <section className="p-12 bg-gray-100">
-      <div className="flex flex-col items-center mb-12">
-        <h2 className="text-4xl font-bold text-center">Destaques para Locação</h2>
-        <span className="block mt-2 h-1.5 w-48 bg-[#F29829] rounded-full" />
+    <section className="py-20 bg-slate-50">
+      <div className="flex flex-col items-center mb-16 px-4">
+        <h2 className="text-4xl font-extrabold text-slate-800 tracking-tight text-center">
+          Destaques para Locação
+        </h2>
+        <span className="block mt-3 h-1 w-24 bg-[#F29829] rounded-full" />
       </div>
 
       {imoveis.length === 0 ? (
-        <p className="text-center text-gray-500">Nenhum imóvel em destaque disponível no momento.</p>
+        <p className="text-center text-slate-400 font-medium">Nenhum imóvel em destaque disponível no momento.</p>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-3 justify-items-center gap-6 max-w-6xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-3 justify-items-center gap-8 max-w-6xl mx-auto px-6">
           {imoveis.map((imovel) => (
             <ImovelCard key={imovel.id} imovel={imovel} />
           ))}
