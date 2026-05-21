@@ -8,6 +8,7 @@ import Head from "@/app/components/head/page";
 import Footer from "@/app/components/footer/page";
 import Navbar from "@/app/components/navbar/page";
 import { BiCheckCircle, BiTrash, BiImageAdd } from "react-icons/bi";
+import WhatsAppButton from "@/app/components/whatsapp/page";
 
 export default function EnviarImovel() {
   const router = useRouter();
@@ -252,6 +253,7 @@ export default function EnviarImovel() {
         </div>
       </main>
       <Footer />
+      <WhatsAppButton />
     </div>
   );
 }

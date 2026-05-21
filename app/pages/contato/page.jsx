@@ -6,6 +6,7 @@ import Head from '../../components/head/page';
 import Navbar from '../../components/navbar/page';
 import Footer from '../../components/footer/page';
 import { BsCheckCircleFill, BsXCircleFill, BsTelephoneFill, BsEnvelopeFill, BsClockFill } from 'react-icons/bs';
+import WhatsAppButton from '@/app/components/whatsapp/page';
 
 export default function Contato() {
   const [status, setStatus] = useState('');
@@ -195,6 +196,7 @@ export default function Contato() {
       </div>
 
       <Footer />
+      <WhatsAppButton />
     </div>
   );
 }

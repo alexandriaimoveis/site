@@ -17,6 +17,7 @@ import {
   BiLoaderAlt,
   BiChevronRight
 } from "react-icons/bi";
+import WhatsAppButton from "@/app/components/whatsapp/page";
 
 function ImovelCard({ imovel }) {
   const [favorito, setFavorito] = useState(false);
@@ -279,6 +280,7 @@ export default function Resultados() {
       </Suspense>
 
       <Footer />
+      <WhatsAppButton />
     </div>
   );
 }

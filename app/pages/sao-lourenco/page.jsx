@@ -7,6 +7,7 @@ import Head from '../../components/head/page';
 import Navbar from '../../components/navbar/page';
 import Footer from '@/app/components/footer/page';
 import { BiMap, BiCompass, BiCoffeeTogo, BiRocket, BiChevronRight, BiStore } from "react-icons/bi";
+import WhatsAppButton from "@/app/components/whatsapp/page";
 
 export default function SaoLourenco() {
   return (
@@ -163,6 +164,7 @@ export default function SaoLourenco() {
       </main>
 
       <Footer />
+      <WhatsAppButton />
     </div>
   );
 }

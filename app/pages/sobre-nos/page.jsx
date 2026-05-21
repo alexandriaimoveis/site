@@ -5,6 +5,7 @@ import Head from '../../components/head/page';
 import Navbar from '../../components/navbar/page';
 import Footer from '@/app/components/footer/page';
 import { BsCupHot, BsGeoAltFill, BsCompass } from "react-icons/bs";
+import WhatsAppButton from '@/app/components/whatsapp/page';
 
 export default function SobreNos() {
   return (
@@ -103,6 +104,7 @@ export default function SobreNos() {
       </div>
 
       <Footer />
+      <WhatsAppButton />
     </div>
   );
 }

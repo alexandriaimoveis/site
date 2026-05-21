@@ -9,6 +9,7 @@ import Footer from "@/app/components/footer/page";
 import { supabase } from "@/app/lib/supabase";
 import { BiUser, BiPhone, BiEnvelope, BiLockAlt, BiCheckCircle } from "react-icons/bi";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import WhatsAppButton from "@/app/components/whatsapp/page";
 
 export default function MeuPerfil() {
   const router = useRouter();
@@ -232,6 +233,7 @@ export default function MeuPerfil() {
       </main>
 
       <Footer />
+      <WhatsAppButton />
     </div>
   );
 }

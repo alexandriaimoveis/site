@@ -15,6 +15,7 @@ import {
   BiBath,
   BiArea,
 } from "react-icons/bi";
+import WhatsAppButton from "@/app/components/whatsapp/page";
 
 function ImovelCard({ imovel }) {
   const [favorito, setFavorito] = useState(false);
@@ -211,6 +212,7 @@ export default function Vendas() {
       </div>
 
       <Footer />
+      <WhatsAppButton />
     </div>
   );
 }

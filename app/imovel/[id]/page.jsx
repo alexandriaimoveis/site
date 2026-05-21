@@ -19,6 +19,7 @@ import {
   BiLoaderAlt,
   BiHash
 } from "react-icons/bi";
+import WhatsAppButton from "@/app/components/whatsapp/page";
 
 export default function DetalhesImovel() {
   const { id } = useParams();
@@ -230,6 +231,7 @@ export default function DetalhesImovel() {
       </main>
 
       <Footer />
+      <WhatsAppButton />
     </div>
   );
 }

@@ -10,6 +10,7 @@ import Header from "@/app/components/header/page";
 import Head from "@/app/components/head/page";
 import Navbar from "@/app/components/navbar/page";
 import Footer from "@/app/components/footer/page";
+import WhatsAppButton from "@/app/components/whatsapp/page";
 
 function ImovelCard({ imovel, onDelete }) {
   const precoFinal = imovel.preco_venda;
@@ -178,6 +179,7 @@ export default function MeusImoveis() {
       </main>
 
       <Footer />
+      <WhatsAppButton />
     </div>
   );
 }

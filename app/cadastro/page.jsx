@@ -8,6 +8,7 @@ import Navbar from "@/app/components/navbar/page";
 import Footer from "@/app/components/footer/page";
 import { supabase } from "@/app/lib/supabase";
 import { BiUser, BiPhone, BiEnvelope, BiCheckCircle, BiLockAlt, BiMessageDetail } from "react-icons/bi";
+import WhatsAppButton from "../components/whatsapp/page";
 
 export default function AcessoCliente() {
   const router = useRouter();
@@ -326,6 +327,7 @@ export default function AcessoCliente() {
       </main>
 
       <Footer />
+      <WhatsAppButton />
     </div>
   );
 }

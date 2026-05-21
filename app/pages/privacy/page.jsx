@@ -2,6 +2,7 @@ import Header from '@/app/components/header/page';
 import Head from '../../components/head/page';
 import Navbar from '../../components/navbar/page';
 import Footer from '@/app/components/footer/page';
+import WhatsAppButton from '@/app/components/whatsapp/page';
 
 export default function PoliticaDePrivacidade() {
   return (
@@ -373,6 +374,7 @@ export default function PoliticaDePrivacidade() {
         </main>
       </div>
       <Footer />
+      <WhatsAppButton />
     </div>
   );
 }

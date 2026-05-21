@@ -8,6 +8,7 @@ import Head from "@/app/components/head/page";
 import Navbar from "@/app/components/navbar/page";
 import Footer from "@/app/components/footer/page";
 import { BiImageAdd, BiSave, BiLoaderAlt } from "react-icons/bi";
+import WhatsAppButton from "../components/whatsapp/page";
 
 function EdicaoContent() {
   const searchParams = useSearchParams();
@@ -225,6 +226,7 @@ export default function EditarImovel() {
       </Suspense>
 
       <Footer />
+      <WhatsAppButton />
     </div>
   );
 }
