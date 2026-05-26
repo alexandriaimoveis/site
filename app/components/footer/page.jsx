@@ -54,6 +54,7 @@ export default function Footer() {
             <p className="flex items-center gap-2.5">
               <BiPhone className="text-[#F29829] text-lg shrink-0" /> 
               <span><strong>Telefone:</strong> (35) 9 8713-1293</span>
+              <span><strong>Telefone:</strong> (35) 9 8802-1496</span>
             </p>
             <p className="flex items-start gap-2.5 leading-relaxed">
               <BiSolidTime className="text-[#F29829] text-lg shrink-0 mt-0.5" /> 

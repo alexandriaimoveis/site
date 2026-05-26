@@ -37,7 +37,6 @@ export default function Head() {
   };
 
   return (
-    // Transmutado para um fundo grafite escuro premium com borda sutil inferior
     <section className="bg-[#1e293b] text-slate-200 text-[11px] font-semibold tracking-wide uppercase border-b border-slate-800">
       <ul
         className="
@@ -84,7 +83,6 @@ export default function Head() {
 
         {clienteNome ? (
           <li className="w-full xs:w-auto sm:w-auto">
-            {/* Bloco de boas-vindas sofisticado */}
             <span className="flex items-center justify-center gap-2 px-5 py-3 bg-[#111827] text-white font-bold select-none border-r border-slate-800/60 h-full">
               <BsPersonCheck size={14} className="text-[#F29829]" />
               Olá, {clienteNome}
@@ -93,7 +91,6 @@ export default function Head() {
         ) : (
           <Link href="/cadastro" className="w-full xs:w-auto sm:w-auto">
             <li>
-              {/* Botão de Login usando seu ouro institucional equilibrado */}
               <span className="flex items-center justify-center gap-2 px-6 py-3 bg-[#F29829] hover:bg-[#111827] text-white font-bold ease-in-out duration-300 cursor-pointer h-full">
                 <BsLock />
                 Login / Cadastro
@@ -106,7 +103,6 @@ export default function Head() {
           <li className="w-full xs:w-auto sm:w-auto">
             <button
               onClick={handleLogout}
-              // Botão de sair refinado sem aquele vermelho gritante
               className="w-full h-full flex items-center justify-center gap-2 px-5 py-3 bg-red-950/40 text-red-400 font-bold hover:bg-red-600 hover:text-white ease-in-out duration-300 cursor-pointer outline-none border-none text-[11px] uppercase tracking-wide"
             >
               <BiLogOut size={14} />

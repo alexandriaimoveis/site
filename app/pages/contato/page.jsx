@@ -85,6 +85,7 @@ export default function Contato() {
                 <div>
                   <h3 className="font-bold text-slate-900 text-sm uppercase tracking-wide">Telefone & WhatsApp</h3>
                   <p className="text-slate-600 text-sm mt-1 font-semibold">+55 (35) 9 8713-1293</p>
+                  <p className="text-slate-600 text-sm mt-1 font-semibold">+55 (35) 9 8802-1496</p>
                 </div>
               </div>
 
@@ -94,7 +95,7 @@ export default function Contato() {
                 </span>
                 <div>
                   <h3 className="font-bold text-slate-900 text-sm uppercase tracking-wide">E-mail Corporativo</h3>
-                  <p className="text-slate-600 text-sm mt-1 font-semibold">alexandriaimoveis@gmail.com</p>
+                  <p className="text-slate-600 text-sm mt-1 font-semibold">alexandrianegociosimobiliarios@gmail.com</p>
                 </div>
               </div>
 

@@ -36,6 +36,7 @@ export default function Header() {
             <div className="leading-tight text-left">
               <p className="font-bold uppercase tracking-wider text-slate-400 text-[10px]">Contato</p>
               <p className="text-slate-700 font-extrabold mt-0.5 tracking-wide">+55 (35) 9 8713-1293</p>
+              <p className="text-slate-700 font-extrabold mt-0.5 tracking-wide">+55 (35) 9 8802-1496</p>
             </div>
           </div>
 
@@ -55,7 +56,7 @@ export default function Header() {
             </span>
             <div className="leading-tight text-left">
               <p className="font-bold uppercase tracking-wider text-slate-400 text-[10px]">E-mail</p>
-              <p className="text-slate-700 font-extrabold mt-0.5 tracking-wide">alexandriaimoveis@gmail.com</p>
+              <p className="text-slate-700 font-extrabold mt-0.5 tracking-wide">alexandrianegociosimobiliarios@gmail.com</p>
             </div>
           </div>
         </div>
