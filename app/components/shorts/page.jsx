@@ -14,7 +14,7 @@ export default function Shorts() {
 
       <div className="max-w-6xl mx-auto px-6 flex justify-center">
         <figure 
-          data-behold-id="9gfERF5n5qQEwDhqwLQX" 
+          data-behold-id="HRREPnhS8OhVbv3OFXge" 
           className="w-full rounded-2xl overflow-hidden shadow-xl"
         ></figure>
       </div>
