@@ -31,13 +31,13 @@ function ImovelCard({ imovel, onDelete }) {
   return (
     <div className="group w-full max-w-sm border border-slate-100 rounded-2xl shadow-sm text-center flex flex-col justify-between overflow-hidden bg-white hover:shadow-md transition-all duration-300 relative">
       
-      <button
+      {/* <button
         onClick={() => onDelete(imovel.id)}
         className="absolute top-3 left-3 bg-white/80 backdrop-blur-md text-rose-600 p-2.5 rounded-full hover:bg-rose-600 hover:text-white shadow-sm transition-all duration-300 z-10 cursor-pointer"
         title="Excluir Imóvel"
       >
         <BiTrash size={18} />
-      </button>
+      </button> */}
 
       <div className="relative w-full h-[220px] overflow-hidden bg-slate-100">
         {imovel.img_url ? (
@@ -71,13 +71,13 @@ function ImovelCard({ imovel, onDelete }) {
         </p>
       </div>
 
-      <Link
+      {/* <Link
         href={`/editar-imovel?id=${imovel.id}`}
         className="flex items-center justify-center gap-2 w-full py-3.5 bg-[#1F3445] text-white text-xs font-bold uppercase tracking-widest hover:bg-[#F29829] transition-colors duration-300"
       >
         <BiEditAlt size={16} />
         Editar Dados
-      </Link>
+      </Link> */}
     </div>
   );
 }
