@@ -127,7 +127,7 @@ export default function EnviarImovel() {
                 Seu imóvel foi cadastrado e está na fila de aprovação. Em breve ele estará ativo no portal da Alexandria!
               </p>
               <button 
-                onClick={() => router.push("/meus-imoveis")}
+                onClick={() => router.push("/pages/meus-imoveis")}
                 className="mt-4 px-6 py-2.5 bg-[#1F3445] text-white font-bold text-xs uppercase tracking-widest rounded-xl hover:bg-[#F29829] transition-colors shadow-sm"
               >
                 Ver meus imóveis
