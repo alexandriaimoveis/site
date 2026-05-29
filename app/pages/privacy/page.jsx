@@ -351,16 +351,16 @@ export default function PoliticaDePrivacidade() {
             <div className="bg-slate-50 p-4 border border-slate-200/60 rounded-xl">
               <span className="block text-slate-400 font-bold uppercase text-[10px] tracking-wider mb-1">Encarregado (DPO)</span>
               <p className="text-slate-900 font-bold">Alexandre</p>
-              <p className="text-[#F29829] font-semibold underline">alexandriaimoveis@gmail.com</p>
+              <p className="text-[#F29829] font-semibold underline">alexandrianegociosimobiliarios@gmail.com</p>
             </div>
             <div className="bg-slate-50 p-4 border border-slate-200/60 rounded-xl">
               <span className="block text-slate-400 font-bold uppercase text-[10px] tracking-wider mb-1">Canal Direto LGPD</span>
-              <p className="text-[#F29829] font-semibold underline">lgpd@alexandriaimoveis.com.br</p>
+              <p className="text-[#F29829] font-semibold underline">alexandrianegociosimobiliarios@gmail.com</p>
             </div>
-            <div className="bg-slate-50 p-4 border border-slate-200/60 rounded-xl sm:col-span-2">
+            {/* <div className="bg-slate-50 p-4 border border-slate-200/60 rounded-xl sm:col-span-2">
               <span className="block text-slate-400 font-bold uppercase text-[10px] tracking-wider mb-1">Formulário Digital</span>
               <p className="text-slate-700 truncate font-semibold underline">https://www.alexandriaimoveis.com.br/formulario-de-tratamento-de-dados-pessoais</p>
-            </div>
+            </div> */}
           </div>
 
           <p><span className='font-bold text-slate-900'>Lei aplicável.</span> Esta Política será interpretada de acordo com a legislação brasileira, no idioma português.</p>
