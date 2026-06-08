@@ -17,17 +17,17 @@ export default function Search() {
   const [dynamicOptions, setDynamicOptions] = useState({
     cidades: [],
     bairros: [],
-    tipos: [] 
+    tipos: []
   });
 
   const [filters, setFilters] = useState({
-    finalidade: "Venda", 
+    finalidade: "Venda",
     tipoImovel: "",
     cidade: "",
     bairro: "",
-    id: "",            
+    id: "",
     banheiros: "",
-    quartos: "",       
+    quartos: "",
     precoMax: 2000000,
   });
 
@@ -66,7 +66,7 @@ export default function Search() {
   const handleChange = (field, value) => {
     setFilters((prev) => {
       const updated = { ...prev, [field]: value };
-      
+
       if (field === "finalidade") {
         updated.precoMax = value === "Aluguel" ? 5000 : 2000000;
       }
@@ -84,7 +84,9 @@ export default function Search() {
     if (filters.id) params.append("id", filters.id);
     if (filters.quartos) params.append("quartos", filters.quartos);
     if (filters.banheiros) params.append("banheiros", filters.banheiros);
-    if (filters.precoMax) params.append("precoMax", filters.precoMax.toString());
+    if (filters.precoMax && filters.precoMax < maxPriceLimit) {
+      params.append("precoMax", filters.precoMax.toString());
+    }
 
     router.push(`/pages/resultados?${params.toString()}`);
   };
@@ -93,7 +95,7 @@ export default function Search() {
     // Fundo neutro e suave para destacar o painel flutuante de busca avançada
     <div className="w-full flex justify-center px-4 py-16 bg-slate-50">
       <div className="w-full max-w-6xl rounded-2xl bg-white px-8 py-10 text-slate-800 shadow-xl border border-slate-100">
-        
+
         {/* Cabeçalho Interno do Painel */}
         <div className="flex flex-col items-center mb-12">
           <h2 className="text-4xl font-extrabold text-center text-slate-800 tracking-tight">

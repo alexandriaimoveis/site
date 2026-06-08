@@ -53,7 +53,7 @@ function ImovelCard({ imovel }) {
       const { error } = await supabase
         .from("favoritos")
         .insert([{ cliente_id: Number(clienteId), imovel_id: imovel.id }]);
-      
+
       if (!error) setFavorito(true);
       else console.error("Erro ao favoritar:", error.message);
     } else {
@@ -74,7 +74,7 @@ function ImovelCard({ imovel }) {
 
   return (
     <div className="group w-full max-w-sm border border-slate-100 rounded-2xl shadow-sm text-center flex flex-col justify-between overflow-hidden bg-white hover:shadow-md transition-all duration-300 relative">
-      
+
       <div className="relative w-full h-[240px] overflow-hidden bg-slate-100">
         <Link href={`/imovel/${imovel.id}`}>
           {imovel.img_url ? (
@@ -91,7 +91,7 @@ function ImovelCard({ imovel }) {
             </div>
           )}
         </Link>
-        
+
         <span className="absolute top-3 right-3 bg-[#F29829] text-[10px] font-bold px-3 py-1.5 rounded-lg text-white uppercase tracking-wider shadow-sm select-none">
           {imovel.finalidade}
         </span>
@@ -110,11 +110,11 @@ function ImovelCard({ imovel }) {
             {imovel.titulo}
           </h3>
         </Link>
-        
+
         <p className="text-xl font-extrabold text-[#1F3445] mt-1.5 tracking-tight">
           R$ {exibirPreco}
         </p>
-        
+
         <p className="text-xs font-semibold text-slate-400 mt-1 uppercase tracking-wider">
           {imovel.bairro}, {imovel.cidade} - {imovel.estado}
         </p>
@@ -129,7 +129,7 @@ function ImovelCard({ imovel }) {
         ) : (
           <div className="flex flex-col items-center justify-center text-[10px] font-bold text-slate-400">-</div>
         )}
-        
+
         {imovel.banheiros > 0 ? (
           <div className="flex flex-col items-center gap-0.5 text-slate-600">
             <BiBath size={18} className="text-slate-400" />
@@ -156,19 +156,29 @@ function ResultadosContent() {
   useEffect(() => {
     async function fetchResultados() {
       setLoading(true);
-      
+
       let query = supabase
         .from("imoveis")
         .select(`
           id, titulo, finalidade, preco_venda, preco_aluguel,
-          bairro, city:cidade, estado, quartos, banheiros, area_construida,
+          bairro, cidade, estado, quartos, banheiros, area_construida,
           status, created_at,
           imovel_imagens (url, capa)
         `)
         .eq("status", "disponivel");
 
+      // resolvendo a questão da finalidade, pois não pega apenas venda ou apenas aluguel
       const finalidade = searchParams.get("finalidade");
-      if (finalidade) query = query.ilike("finalidade", `%${finalidade}%`);
+      if (finalidade) {
+        if (finalidade === 'venda') {
+          query = query.or('finalidade.eq.venda,finalidade.eq.venda_aluguel')
+        } else if (finalidade === 'aluguel') {
+          query = query.or('finalidade.eq.aluguel,finalidade.eq.venda_aluguel')
+        }
+      }
+
+      const tipo = searchParams.get("tipo");
+      if (tipo) query = query.eq("tipo", tipo);
 
       const cidade = searchParams.get("cidade");
       if (cidade) query = query.eq("cidade", cidade);
@@ -204,10 +214,9 @@ function ResultadosContent() {
       } else {
         const imoveisComImg = data.map((imovel) => {
           const capa = imovel.imovel_imagens?.find((img) => img.capa) || imovel.imovel_imagens?.[0];
-          return { 
-            ...imovel, 
-            cidade: imovel.city,
-            img_url: capa?.url || null 
+          return {
+            ...imovel,
+            img_url: capa?.url || null
           };
         });
         setImoveis(imoveisComImg);
@@ -227,7 +236,7 @@ function ResultadosContent() {
         <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
           Resultados da Busca
         </h2>
-        
+
         {!loading && (
           <div className="mt-3 bg-[#1F3445] text-white text-xs font-bold px-4 py-1.5 rounded-full shadow-sm">
             {imoveis.length} {imoveis.length === 1 ? "imóvel encontrado" : "imóveis encontrados"}
