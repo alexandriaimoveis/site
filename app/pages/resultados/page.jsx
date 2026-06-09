@@ -68,9 +68,16 @@ function ImovelCard({ imovel }) {
     }
   };
 
-  const exibirPreco = imovel.finalidade?.toLowerCase().includes("aluguel")
-    ? `${Number(imovel.preco_aluguel).toLocaleString("pt-BR", { minimumFractionDigits: 2 })}/mês`
-    : Number(imovel.preco_venda).toLocaleString("pt-BR", { minimumFractionDigits: 2 });
+  const finalidade = imovel.finalidade?.toLowerCase()
+  const isVendaAluguel = finalidade === 'venda_aluguel'
+
+  const exibirPrecoVenda = imovel.preco_venda
+    ? `R$ ${Number(imovel.preco_venda).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`
+    : null
+
+  const exibirPrecoAluguel = imovel.preco_aluguel
+    ? `R$ ${Number(imovel.preco_aluguel).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}/mês`
+    : null
 
   return (
     <div className="group w-full max-w-sm border border-slate-100 rounded-2xl shadow-sm text-center flex flex-col justify-between overflow-hidden bg-white hover:shadow-md transition-all duration-300 relative">
@@ -93,7 +100,11 @@ function ImovelCard({ imovel }) {
         </Link>
 
         <span className="absolute top-3 right-3 bg-[#F29829] text-[10px] font-bold px-3 py-1.5 rounded-lg text-white uppercase tracking-wider shadow-sm select-none">
-          {imovel.finalidade}
+          {imovel.finalidade === 'venda_aluguel'
+            ? 'Venda / Aluguel'
+            : imovel.finalidade === 'venda'
+              ? 'Venda'
+              : 'Aluguel'}
         </span>
 
         <button
@@ -111,9 +122,24 @@ function ImovelCard({ imovel }) {
           </h3>
         </Link>
 
-        <p className="text-xl font-extrabold text-[#1F3445] mt-1.5 tracking-tight">
-          R$ {exibirPreco}
-        </p>
+        {isVendaAluguel ? (
+          <div className="flex flex-col items-center gap-0.5 mt-1.5">
+            {exibirPrecoVenda && (
+              <p className="text-base font-extrabold text-[#1F3445] tracking-tight">
+                Venda: {exibirPrecoVenda}
+              </p>
+            )}
+            {exibirPrecoAluguel && (
+              <p className="text-base font-extrabold text-[#1F3445] tracking-tight">
+                Aluguel: {exibirPrecoAluguel}
+              </p>
+            )}
+          </div>
+        ) : (
+          <p className="text-xl font-extrabold text-[#1F3445] mt-1.5 tracking-tight">
+            {finalidade === 'aluguel' ? exibirPrecoAluguel : exibirPrecoVenda}
+          </p>
+        )}
 
         <p className="text-xs font-semibold text-slate-400 mt-1 uppercase tracking-wider">
           {imovel.bairro}, {imovel.cidade} - {imovel.estado}
@@ -167,7 +193,6 @@ function ResultadosContent() {
         `)
         .eq("status", "disponivel");
 
-      // resolvendo a questão da finalidade, pois não pega apenas venda ou apenas aluguel
       const finalidade = searchParams.get("finalidade");
       if (finalidade) {
         if (finalidade === 'venda') {
@@ -197,11 +222,11 @@ function ResultadosContent() {
 
       const precoMax = searchParams.get("precoMax");
       if (precoMax) {
-        const precoNum = parseFloat(precoMax);
-        if (finalidade && finalidade.includes("aluguel")) {
-          query = query.lte("preco_aluguel", precoNum);
-        } else {
-          query = query.lte("preco_venda", precoNum);
+        const precoNum = parseFloat(precoMax)
+        if (finalidade === 'aluguel') {
+          query = query.lte("preco_aluguel", precoNum)
+        } else if (finalidade === 'venda') {
+          query = query.lte("preco_venda", precoNum)
         }
       }
 
