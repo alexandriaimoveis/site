@@ -159,11 +159,10 @@ export default function DetalhesImovel() {
     );
   }
 
-  const precoExibicao = imovel.finalidade?.toLowerCase().includes("aluguel")
-    ? `R$ ${Number(imovel.preco_aluguel).toLocaleString("pt-BR", { minimumFractionDigits: 2 })}/mês`
-    : `R$ ${Number(imovel.preco_venda).toLocaleString("pt-BR", { minimumFractionDigits: 2 })}`;
+  const finalidade = imovel.finalidade?.toLowerCase()
+  const isVendaAluguel = finalidade === 'venda_aluguel'
 
-  const diferenciaisList = imovel.diferenciais 
+  const diferenciaisList = imovel.diferenciais
     ? Object.entries(imovel.diferenciais).filter(([_, v]) => v === true || v === "true").map(([k]) => k)
     : [];
 
@@ -174,12 +173,16 @@ export default function DetalhesImovel() {
       <Navbar />
 
       <main className="max-w-5xl w-full mx-auto px-4 py-12 flex-grow">
-        
+
         <div className="flex flex-col md:flex-row md:justify-between md:items-end gap-4 mb-6">
           <div>
             <div className="flex gap-2">
               <span className="bg-[#F29829] text-white text-[10px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-lg inline-block shadow-sm">
-                {imovel.finalidade}
+                {imovel.finalidade === 'venda_aluguel'
+                  ? 'Venda / Aluguel'
+                  : imovel.finalidade === 'venda'
+                    ? 'Venda'
+                    : 'Aluguel'}
               </span>
               <span className="bg-slate-200 text-slate-700 text-[10px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-lg inline-block shadow-sm">
                 {imovel.tipo}
@@ -195,7 +198,23 @@ export default function DetalhesImovel() {
           </div>
           <div className="text-left md:text-right bg-white md:bg-transparent p-4 md:p-0 border border-slate-100 md:border-0 rounded-2xl shadow-sm md:shadow-none">
             <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Valor do Investimento</p>
-            <p className="text-2xl sm:text-3xl font-black text-[#1F3445] mt-0.5 tracking-tight">{precoExibicao}</p>
+
+            {isVendaAluguel ? (
+              <div className="flex flex-col gap-0.5">
+                <p className="text-xl sm:text-2xl font-black text-[#1F3445] tracking-tight">
+                  Venda: R$ {Number(imovel.preco_venda).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                </p>
+                <p className="text-xl sm:text-2xl font-black text-[#1F3445] tracking-tight">
+                  Aluguel: R$ {Number(imovel.preco_aluguel).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}<span className="text-sm font-bold text-slate-400">/mês</span>
+                </p>
+              </div>
+            ) : (
+              <p className="text-2xl sm:text-3xl font-black text-[#1F3445] mt-0.5 tracking-tight">
+                {finalidade === 'aluguel'
+                  ? `R$ ${Number(imovel.preco_aluguel).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}/mês`
+                  : `R$ ${Number(imovel.preco_venda).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`}
+              </p>
+            )}
           </div>
         </div>
 
@@ -263,9 +282,9 @@ export default function DetalhesImovel() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-8">
-          
+
           <div className="md:col-span-2 space-y-6">
-            
+
             <div className="bg-white border border-slate-100 p-6 sm:p-8 rounded-2xl shadow-sm">
               <h2 className="text-xs font-bold uppercase tracking-wider text-[#F29829] mb-4 border-b pb-3 border-slate-100">
                 Descrição do Imóvel
@@ -343,23 +362,21 @@ export default function DetalhesImovel() {
           <div className="md:col-span-1">
             <div className="bg-white border border-slate-100 p-6 rounded-2xl shadow-sm h-fit sticky top-6">
               <h3 className="text-lg font-bold text-slate-800 mb-5">Entrar em contato</h3>
-              
+
               <div className="flex bg-slate-50 p-1 rounded-full border border-slate-200 mb-6">
                 <button
                   type="button"
                   onClick={() => setTipoContato("mensagem")}
-                  className={`flex-1 flex items-center justify-center gap-2 py-2 px-3 text-xs font-semibold rounded-full transition-all ${
-                    tipoContato === "mensagem" ? "bg-[#F29829] text-white shadow-sm" : "text-slate-500 hover:text-slate-800"
-                  }`}
+                  className={`flex-1 flex items-center justify-center gap-2 py-2 px-3 text-xs font-semibold rounded-full transition-all ${tipoContato === "mensagem" ? "bg-[#F29829] text-white shadow-sm" : "text-slate-500 hover:text-slate-800"
+                    }`}
                 >
                   <FiMessageSquare size={14} /> Mensagem
                 </button>
                 <button
                   type="button"
                   onClick={() => setTipoContato("visita")}
-                  className={`flex-1 flex items-center justify-center gap-2 py-2 px-3 text-xs font-semibold rounded-full transition-all ${
-                    tipoContato === "visita" ? "bg-[#F29829] text-white shadow-sm" : "text-slate-500 hover:text-slate-800"
-                  }`}
+                  className={`flex-1 flex items-center justify-center gap-2 py-2 px-3 text-xs font-semibold rounded-full transition-all ${tipoContato === "visita" ? "bg-[#F29829] text-white shadow-sm" : "text-slate-500 hover:text-slate-800"
+                    }`}
                 >
                   <FiCalendar size={14} /> Agendar visita
                 </button>

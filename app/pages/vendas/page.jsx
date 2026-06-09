@@ -51,7 +51,7 @@ function ImovelCard({ imovel }) {
       const { error } = await supabase
         .from("favoritos")
         .insert([{ cliente_id: Number(clienteId), imovel_id: imovel.id }]);
-      
+
       if (!error) setFavorito(true);
       else console.error("Erro ao favoritar:", error.message);
     } else {
@@ -68,7 +68,7 @@ function ImovelCard({ imovel }) {
 
   return (
     <div className="group w-full max-w-sm rounded-2xl shadow-md hover:shadow-2xl border border-slate-100 flex flex-col overflow-hidden bg-white transition-all duration-300 hover:-translate-y-1.5">
-      
+
       <div className="relative w-full overflow-hidden h-[250px]">
         <Link href={`/imovel/${imovel.id}`}>
           {imovel.img_url ? (
@@ -85,9 +85,13 @@ function ImovelCard({ imovel }) {
             </div>
           )}
         </Link>
-        
+
         <span className="absolute top-4 right-4 bg-[#F29829] text-[10px] font-bold tracking-wider uppercase px-3 py-1.5 rounded-lg text-white shadow-sm">
-          {imovel.finalidade}
+          {imovel.finalidade === 'venda_aluguel'
+            ? 'Venda / Aluguel'
+            : imovel.finalidade === 'venda'
+              ? 'Venda'
+              : 'Aluguel'}
         </span>
 
         <button
@@ -104,7 +108,7 @@ function ImovelCard({ imovel }) {
             {imovel.titulo}
           </h3>
         </Link>
-        
+
         <span className="text-xs font-semibold text-slate-400 mt-1 uppercase tracking-wide">
           {imovel.bairro}, {imovel.cidade}
         </span>
@@ -113,7 +117,7 @@ function ImovelCard({ imovel }) {
           R$ {Number(imovel.preco_venda).toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
         </p>
       </div>
-      
+
       <ul className="flex justify-between items-center w-full bg-slate-50 border-t border-slate-100/60 p-4 px-5 rounded-b-2xl text-slate-600">
         {imovel.quartos > 0 && (
           <li className="flex items-center gap-1.5 text-xs font-bold">
