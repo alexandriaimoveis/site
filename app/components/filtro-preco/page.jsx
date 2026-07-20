@@ -1,5 +1,5 @@
 "use client";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react"; 
 import { BiFilterAlt } from "react-icons/bi";
 
 const FAIXAS_VENDA = [
@@ -46,7 +46,7 @@ export function useFiltroPreco(imoveis, tipoPreco = "venda") {
     });
   }, [imoveis, faixaIndex, ordenacao, tipoPreco]);
 
-  useState(() => {
+  useEffect(() => {
     setFaixaIndex(0);
   }, [tipoPreco]);
 
@@ -60,7 +60,7 @@ export function useFiltroPreco(imoveis, tipoPreco = "venda") {
   };
 }
 
-export default function FiltroPreco({ faixas, faixaIndex, setFaixaIndex, ordenacao, setOrdenacao }) {
+export default function FiltroPreco({ faixas = [], faixaIndex = 0, setFaixaIndex, ordenacao, setOrdenacao }) {
   return (
     <div className="flex flex-col sm:flex-row items-center justify-center gap-3 max-w-2xl mx-auto mt-8 px-6">
       <div className="flex items-center gap-2 text-slate-400">
@@ -70,7 +70,7 @@ export default function FiltroPreco({ faixas, faixaIndex, setFaixaIndex, ordenac
 
       <select
         value={faixaIndex}
-        onChange={(e) => setFaixaIndex(Number(e.target.value))}
+        onChange={(e) => setFaixaIndex?.(Number(e.target.value))}
         className="w-full sm:w-auto px-5 py-2.5 rounded-full border border-slate-200 bg-white text-xs font-bold uppercase tracking-wider text-slate-600 shadow-sm focus:outline-none focus:ring-2 focus:ring-[#F29829]/40 cursor-pointer hover:border-[#F29829]/50 transition-colors"
       >
         {faixas.map((faixa, index) => (
@@ -82,7 +82,7 @@ export default function FiltroPreco({ faixas, faixaIndex, setFaixaIndex, ordenac
 
       <select
         value={ordenacao}
-        onChange={(e) => setOrdenacao(e.target.value)}
+        onChange={(e) => setOrdenacao?.(e.target.value)}
         className="w-full sm:w-auto px-5 py-2.5 rounded-full border border-slate-200 bg-white text-xs font-bold uppercase tracking-wider text-slate-600 shadow-sm focus:outline-none focus:ring-2 focus:ring-[#F29829]/40 cursor-pointer hover:border-[#F29829]/50 transition-colors"
       >
         <option value="desc">Maior preço primeiro</option>
