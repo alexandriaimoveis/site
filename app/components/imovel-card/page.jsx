@@ -9,7 +9,8 @@ export default function ImovelCard({ imovel, contexto }) {
   const [favorito, setFavorito] = useState(false);
 
   useEffect(() => {
-    if (!imovel) return;
+    if (!imovel?.id) return; 
+
     async function checarFavorito() {
       const clienteId = localStorage.getItem("alexandria_cliente_id");
       if (!clienteId) return;
@@ -24,7 +25,7 @@ export default function ImovelCard({ imovel, contexto }) {
       if (data && !error) setFavorito(true);
     }
     checarFavorito();
-  }, [imovel.id]);
+  }, [imovel?.id]);
 
   if (!imovel) return null;
 
@@ -105,7 +106,7 @@ export default function ImovelCard({ imovel, contexto }) {
         </span>
 
         <p className="text-[#1e293b] font-black text-xl mt-4 tracking-tight">
-          R$ {Number(precoExibido).toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
+          R$ {Number(precoExibido || 0).toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
           {isAluguel && (
             <span className="text-xs font-bold text-slate-400 tracking-normal font-sans ml-1">/mês</span>
           )}
