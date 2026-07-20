@@ -21,7 +21,8 @@ import {
   BiBuilding,
   BiCheckCircle,
   BiDollarCircle,
-  BiInfoCircle
+  BiInfoCircle,
+  BiX
 } from "react-icons/bi";
 import { BsCheckCircleFill, BsXCircleFill } from 'react-icons/bs';
 import { FiMessageSquare, FiCalendar } from "react-icons/fi";
@@ -34,6 +35,9 @@ export default function DetalhesImovel() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [loading, setLoading] = useState(true);
   const [favorito, setFavorito] = useState(false);
+  
+  const [isModalAberto, setIsModalAberto] = useState(false);
+  const [isZoomed, setIsZoomed] = useState(false);
 
   const [status, setStatus] = useState('');
   const [error, setError] = useState('');
@@ -45,6 +49,15 @@ export default function DetalhesImovel() {
     email: "",
     mensagem: ""
   });
+
+  useEffect(() => {
+    if (isModalAberto) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
+    return () => { document.body.style.overflow = "unset"; };
+  }, [isModalAberto]);
 
   useEffect(() => {
     if (!id) return;
@@ -126,11 +139,15 @@ export default function DetalhesImovel() {
     }
   };
 
-  const nextSlide = () => {
+  const nextSlide = (e) => {
+    if (e) e.stopPropagation();
+    setIsZoomed(false);
     setCurrentSlide((prev) => (prev === imagens.length - 1 ? 0 : prev + 1));
   };
 
-  const prevSlide = () => {
+  const prevSlide = (e) => {
+    if (e) e.stopPropagation();
+    setIsZoomed(false);
     setCurrentSlide((prev) => (prev === 0 ? imagens.length - 1 : prev - 1));
   };
 
@@ -218,7 +235,11 @@ export default function DetalhesImovel() {
           </div>
         </div>
 
-        <div className="relative w-full h-[320px] sm:h-[480px] bg-slate-200 rounded-2xl overflow-hidden shadow-md group">
+        {/* Banner de Imagem Principal interativo para abrir o Modal */}
+        <div 
+          onClick={() => setIsModalAberto(true)}
+          className="relative w-full h-[320px] sm:h-[480px] bg-slate-200 rounded-2xl overflow-hidden shadow-md group cursor-zoom-in"
+        >
           {imagens.length > 0 ? (
             <>
               <Image
@@ -226,17 +247,21 @@ export default function DetalhesImovel() {
                 alt={`${imovel.titulo} - Foto ${currentSlide + 1}`}
                 fill
                 priority
-                className="object-cover transition-all duration-300"
+                className="object-cover transition-all duration-300 group-hover:scale-[1.01]"
               />
+              <div className="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center pointer-events-none">
+                <span className="bg-white/90 backdrop-blur-sm text-slate-800 text-xs font-bold px-4 py-2 rounded-xl shadow">🔍 Clique para Ampliar</span>
+              </div>
+
               {imagens.length > 1 && (
                 <>
-                  <button onClick={prevSlide} className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/80 backdrop-blur-md hover:bg-white p-2 rounded-full shadow-md text-slate-800 transition-all cursor-pointer">
+                  <button onClick={nextSlide} className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/80 backdrop-blur-md hover:bg-white p-2 rounded-full shadow-md text-slate-800 transition-all cursor-pointer z-10">
                     <BiChevronLeft size={26} />
                   </button>
-                  <button onClick={nextSlide} className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/80 backdrop-blur-md hover:bg-white p-2 rounded-full shadow-md text-slate-800 transition-all cursor-pointer">
+                  <button onClick={nextSlide} className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/80 backdrop-blur-md hover:bg-white p-2 rounded-full shadow-md text-slate-800 transition-all cursor-pointer z-10">
                     <BiChevronRight size={26} />
                   </button>
-                  <span className="absolute bottom-4 right-4 bg-slate-900/80 backdrop-blur-sm text-white text-[11px] font-bold px-3 py-1.5 rounded-lg tracking-wider">
+                  <span className="absolute bottom-4 right-4 bg-slate-900/80 backdrop-blur-sm text-white text-[11px] font-bold px-3 py-1.5 rounded-lg tracking-wider z-10">
                     {currentSlide + 1} / {imagens.length}
                   </span>
                 </>
@@ -247,7 +272,7 @@ export default function DetalhesImovel() {
               Nenhuma imagem cadastrada para este imóvel.
             </div>
           )}
-          <button onClick={() => setFavorito(!favorito)} className="absolute top-4 left-4 bg-white/80 backdrop-blur-md p-3 rounded-full shadow-md transition-transform duration-200 hover:scale-110 cursor-pointer">
+          <button onClick={(e) => { e.stopPropagation(); setFavorito(!favorito); }} className="absolute top-4 left-4 bg-white/80 backdrop-blur-md p-3 rounded-full shadow-md transition-transform duration-200 hover:scale-110 cursor-pointer z-10">
             <BiSolidHeart size={22} className={favorito ? "text-rose-500" : "text-slate-400"} />
           </button>
         </div>
@@ -282,9 +307,7 @@ export default function DetalhesImovel() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-8">
-
           <div className="md:col-span-2 space-y-6">
-
             <div className="bg-white border border-slate-100 p-6 sm:p-8 rounded-2xl shadow-sm">
               <h2 className="text-xs font-bold uppercase tracking-wider text-[#F29829] mb-4 border-b pb-3 border-slate-100">
                 Descrição do Imóvel
@@ -439,12 +462,71 @@ export default function DetalhesImovel() {
               </form>
             </div>
           </div>
-
         </div>
       </main>
 
       <Footer />
       <WhatsAppButton />
+
+      {isModalAberto && imagens.length > 0 && (
+        <div 
+          onClick={() => { setIsModalAberto(false); setIsZoomed(false); }} 
+          className="fixed inset-0 z-[9999] bg-black/95 backdrop-blur-sm flex items-center justify-center select-none transition-all duration-300 opacity-100 ease-out cursor-zoom-out"
+        >
+          <button 
+            onClick={() => { setIsModalAberto(false); setIsZoomed(false); }}
+            className="absolute top-4 right-4 bg-white/10 hover:bg-white/20 text-white p-2 rounded-full transition-colors z-[10000] cursor-pointer"
+          >
+            <BiX size={30} />
+          </button>
+
+          <div className="absolute top-6 left-1/2 -translate-x-1/2 text-white/80 text-xs font-bold tracking-wider uppercase">
+            {currentSlide + 1} / {imagens.length}
+          </div>
+
+          {imagens.length > 1 && !isZoomed && (
+            <button 
+              onClick={prevSlide}
+              className="absolute left-4 bg-white/10 hover:bg-white/20 text-white p-3 rounded-full transition-all hover:scale-110 z-[10000] cursor-pointer"
+            >
+              <BiChevronLeft size={32} />
+            </button>
+          )}
+
+          <div 
+            onClick={(e) => e.stopPropagation()} 
+            className={`relative w-[94vw] h-[80vh] flex items-center justify-center transition-all duration-300 ${
+              isZoomed ? "overflow-auto" : "overflow-hidden"
+            }`}
+          >
+            <div className="relative w-full h-full flex items-center justify-center">
+              <Image
+                src={imagens[currentSlide].url}
+                alt={`Zoom - Foto ${currentSlide + 1}`}
+                fill
+                onClick={() => setIsZoomed(!isZoomed)}
+                className={`object-contain transition-transform duration-300 ease-in-out ${
+                  isZoomed ? "scale-150 cursor-zoom-out" : "cursor-zoom-in"
+                }`}
+                quality={100}
+              />
+            </div>
+          </div>
+
+          {imagens.length > 1 && !isZoomed && (
+            <button 
+              onClick={nextSlide}
+              className="absolute right-4 bg-white/10 hover:bg-white/20 text-white p-3 rounded-full transition-all hover:scale-110 z-[10000] cursor-pointer"
+            >
+              <BiChevronRight size={32} />
+            </button>
+          )}
+
+          <div className="absolute bottom-6 left-1/2 -translate-x-1/2 text-white/50 text-[11px] font-medium tracking-wide pointer-events-none bg-black/40 backdrop-blur-sm px-4 py-1.5 rounded-full">
+            {isZoomed ? "Clique na foto para afastar" : "Clique na foto para dar Super Zoom (1.5x) 🔍"}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
