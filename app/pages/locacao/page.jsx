@@ -16,6 +16,7 @@ import {
   BiArea,
 } from "react-icons/bi";
 import WhatsAppButton from "@/app/components/whatsapp/page";
+import FiltroPreco, { useFiltroPreco } from "@/app/components/filtro-preco/page";
 
 function ImovelCard({ imovel }) {
   const [favorito, setFavorito] = useState(false);
@@ -144,6 +145,8 @@ function ImovelCard({ imovel }) {
 export default function Locacao() {
   const [imoveis, setImoveis] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { imoveisFiltrados, faixas, faixaIndex, setFaixaIndex, ordenacao, setOrdenacao } =
+    useFiltroPreco(imoveis, "aluguel");
 
   useEffect(() => {
     async function fetchImoveis() {
@@ -196,6 +199,14 @@ export default function Locacao() {
           </div>
         </section>
 
+        <FiltroPreco
+          faixas={faixas}
+          faixaIndex={faixaIndex}
+          setFaixaIndex={setFaixaIndex}
+          ordenacao={ordenacao}
+          setOrdenacao={setOrdenacao}
+        />
+
         <main className="max-w-6xl mx-auto px-6 py-16">
           {loading ? (
             <div className="flex flex-col items-center justify-center py-12">
@@ -208,7 +219,7 @@ export default function Locacao() {
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 justify-items-center">
-              {imoveis.map((imovel) => (
+              {imoveisFiltrados.map((imovel) => (
                 <ImovelCard key={imovel.id} imovel={imovel} />
               ))}
             </div>

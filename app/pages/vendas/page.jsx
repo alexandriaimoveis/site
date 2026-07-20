@@ -16,6 +16,7 @@ import {
   BiArea,
 } from "react-icons/bi";
 import WhatsAppButton from "@/app/components/whatsapp/page";
+import FiltroPreco, { useFiltroPreco } from "@/app/components/filtro-preco/page";
 
 function ImovelCard({ imovel }) {
   const [favorito, setFavorito] = useState(false);
@@ -143,6 +144,8 @@ function ImovelCard({ imovel }) {
 export default function Vendas() {
   const [imoveis, setImoveis] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { imoveisFiltrados, faixas, faixaIndex, setFaixaIndex, ordenacao, setOrdenacao } =
+    useFiltroPreco(imoveis, "venda");
 
   useEffect(() => {
     async function fetchImoveis() {
@@ -195,19 +198,27 @@ export default function Vendas() {
           </div>
         </section>
 
+        <FiltroPreco
+          faixas={faixas}
+          faixaIndex={faixaIndex}
+          setFaixaIndex={setFaixaIndex}
+          ordenacao={ordenacao}
+          setOrdenacao={setOrdenacao}
+        />
+
         <main className="max-w-6xl mx-auto px-6 py-16">
           {loading ? (
             <div className="flex flex-col items-center justify-center py-12">
               <div className="h-8 w-8 animate-spin rounded-full border-4 border-[#F29829] border-t-transparent" />
               <p className="mt-4 text-sm font-semibold text-slate-400 uppercase tracking-wider">Carregando catálogo...</p>
             </div>
-          ) : imoveis.length === 0 ? (
+          ) : imoveisFiltrados.length === 0 ? (
             <div className="text-center py-16 bg-white rounded-2xl border border-slate-100 p-8 shadow-sm">
               <p className="text-slate-500 font-medium">Nenhum imóvel à venda disponível no momento.</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 justify-items-center">
-              {imoveis.map((imovel) => (
+              {imoveisFiltrados.map((imovel) => (
                 <ImovelCard key={imovel.id} imovel={imovel} />
               ))}
             </div>

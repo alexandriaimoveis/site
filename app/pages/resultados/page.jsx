@@ -18,6 +18,7 @@ import {
   BiChevronRight
 } from "react-icons/bi";
 import WhatsAppButton from "@/app/components/whatsapp/page";
+import FiltroPreco, { useFiltroPreco } from "@/app/components/filtro-preco/page";
 
 function ImovelCard({ imovel }) {
   const [favorito, setFavorito] = useState(false);
@@ -178,6 +179,10 @@ function ResultadosContent() {
   const searchParams = useSearchParams();
   const [imoveis, setImoveis] = useState([]);
   const [loading, setLoading] = useState(true);
+  const finalidadeUrl = searchParams.get("finalidade");
+  const tipoPreco = finalidadeUrl === "aluguel" ? "aluguel" : "venda";
+  const { imoveisFiltrados, faixas, faixaIndex, setFaixaIndex, ordenacao, setOrdenacao } =
+    useFiltroPreco(imoveis, tipoPreco);
 
   useEffect(() => {
     async function fetchResultados() {
@@ -270,13 +275,23 @@ function ResultadosContent() {
         <span className="block mt-4 h-1 w-16 bg-[#F29829] rounded-full" />
       </div>
 
-      <main className="flex-grow px-4 pb-20 max-w-7xl w-full mx-auto">
+      {!loading && imoveis.length > 0 && (
+        <FiltroPreco
+          faixas={faixas}
+          faixaIndex={faixaIndex}
+          setFaixaIndex={setFaixaIndex}
+          ordenacao={ordenacao}
+          setOrdenacao={setOrdenacao}
+        />
+      )}
+
+      <main className="flex-grow px-4 pt-20 pb-20 max-w-7xl w-full mx-auto">
         {loading ? (
           <div className="flex flex-col items-center justify-center py-20 space-y-3">
             <BiLoaderAlt size={32} className="text-[#F29829] animate-spin" />
             <p className="text-sm text-slate-500 font-medium">Cruzando dados de localização...</p>
           </div>
-        ) : imoveis.length === 0 ? (
+        ) : imoveisFiltrados.length === 0 ? (
           <div className="text-center py-16 bg-white border border-slate-100 rounded-2xl p-8 max-w-md mx-auto shadow-sm flex flex-col items-center">
             <p className="text-slate-500 text-sm font-medium leading-relaxed">
               Não encontramos nenhum imóvel correspondente aos filtros aplicados.
@@ -287,7 +302,7 @@ function ResultadosContent() {
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 justify-items-center gap-8 max-w-6xl mx-auto">
-            {imoveis.map((imovel) => (
+            {imoveisFiltrados.map((imovel) => (
               <ImovelCard key={imovel.id} imovel={imovel} />
             ))}
           </div>

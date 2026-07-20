@@ -9,6 +9,7 @@ export default function ImovelCard({ imovel, contexto }) {
   const [favorito, setFavorito] = useState(false);
 
   useEffect(() => {
+    if (!imovel) return;
     async function checarFavorito() {
       const clienteId = localStorage.getItem("alexandria_cliente_id");
       if (!clienteId) return;
@@ -24,6 +25,8 @@ export default function ImovelCard({ imovel, contexto }) {
     }
     checarFavorito();
   }, [imovel.id]);
+
+  if (!imovel) return null;
 
   const handleLikeClick = async () => {
     const clienteId = localStorage.getItem("alexandria_cliente_id");
@@ -52,7 +55,6 @@ export default function ImovelCard({ imovel, contexto }) {
     }
   };
 
-  // Define qual preço mostrar com base no contexto da página (venda ou aluguel)
   const isAluguel = contexto === "aluguel";
   const precoExibido = isAluguel ? imovel.preco_aluguel : imovel.preco_venda;
 

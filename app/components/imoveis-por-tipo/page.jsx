@@ -8,6 +8,7 @@ import Footer from "@/app/components/footer/page";
 import WhatsAppButton from "@/app/components/whatsapp/page";
 import ImovelCard from "@/app/components/imovel-card/page";
 import { supabase } from "@/app/lib/supabase";
+import FiltroPreco, { useFiltroPreco } from "@/app/components/filtro-preco/page";
 
 const TIPO_MAP = {
   casa: { label: "Casa", db: "casa" },
@@ -28,6 +29,8 @@ const FINALIDADE_INFO = {
 export default function ImoveisPorTipo({ tipoSlug, finalidade }) {
   const [imoveis, setImoveis] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { imoveisFiltrados, faixas, faixaIndex, setFaixaIndex, ordenacao, setOrdenacao } =
+    useFiltroPreco(imoveis, finalidade);
 
   const tipoInfo = TIPO_MAP[tipoSlug];
   const finalidadeInfo = FINALIDADE_INFO[finalidade];
@@ -106,6 +109,14 @@ export default function ImoveisPorTipo({ tipoSlug, finalidade }) {
           </div>
         </section>
 
+        <FiltroPreco
+          faixas={faixas}
+          faixaIndex={faixaIndex}
+          setFaixaIndex={setFaixaIndex}
+          ordenacao={ordenacao}
+          setOrdenacao={setOrdenacao}
+        />
+
         <main className="max-w-6xl mx-auto px-6 py-16">
           {loading ? (
             <div className="flex flex-col items-center justify-center py-12">
@@ -120,7 +131,7 @@ export default function ImoveisPorTipo({ tipoSlug, finalidade }) {
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 justify-items-center">
-              {imoveis.map((imovel) => (
+              {imoveisFiltrados.map((imovel) => (
                 <ImovelCard key={imovel.id} imovel={imovel} contexto={finalidade} />
               ))}
             </div>
