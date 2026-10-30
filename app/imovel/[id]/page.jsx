@@ -27,6 +27,7 @@ import {
 import { BsCheckCircleFill, BsXCircleFill } from 'react-icons/bs';
 import { FiMessageSquare, FiCalendar } from "react-icons/fi";
 import WhatsAppButton from "@/app/components/whatsapp/page";
+import ImovelCard from "@/app/components/imovel-card/page";
 
 export default function DetalhesImovel() {
   const { id } = useParams();
@@ -35,7 +36,8 @@ export default function DetalhesImovel() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [loading, setLoading] = useState(true);
   const [favorito, setFavorito] = useState(false);
-  
+  const [imoveisRelacionados, setImoveisRelacionados] = useState([]);
+
   const [isModalAberto, setIsModalAberto] = useState(false);
   const [isZoomed, setIsZoomed] = useState(false);
 
@@ -91,6 +93,29 @@ export default function DetalhesImovel() {
           setImagens(imgsOrdenadas);
         }
       }
+      if (data) {
+        const { data: relacionados } = await supabase
+          .from("imoveis")
+          .select(`
+            id, tipo, finalidade, titulo, bairro, cidade,
+            preco_venda, preco_aluguel, quartos, banheiros, area_construida,
+            imovel_imagens (url, capa)
+          `)
+          .eq("tipo", data.tipo)
+          .neq("id", id)
+          .neq("status", "analise")
+          .limit(3);
+
+        if (relacionados) {
+          setImoveisRelacionados(
+            relacionados.map(i => ({
+              ...i,
+              img_url: i.imovel_imagens?.find(img => img.capa)?.url || i.imovel_imagens?.[0]?.url || null,
+            }))
+          );
+        }
+      }
+
       setLoading(false);
     }
 
@@ -463,6 +488,26 @@ export default function DetalhesImovel() {
             </div>
           </div>
         </div>
+        {imoveisRelacionados.length > 0 && (
+          <section className="mt-16">
+            <div className="flex items-center gap-3 mb-8">
+              <div className="h-px flex-1 bg-slate-200" />
+              <h2 className="text-xs font-bold uppercase tracking-widest text-slate-400 whitespace-nowrap">
+                Você também pode gostar
+              </h2>
+              <div className="h-px flex-1 bg-slate-200" />
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+              {imoveisRelacionados.map(i => (
+                <ImovelCard
+                  key={i.id}
+                  imovel={i}
+                  contexto={i.finalidade === "aluguel" ? "aluguel" : "venda"}
+                />
+              ))}
+            </div>
+          </section>
+        )}
       </main>
 
       <Footer />
