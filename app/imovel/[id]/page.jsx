@@ -267,23 +267,26 @@ export default function DetalhesImovel() {
         >
           {imagens.length > 0 ? (
             <>
-              <Image
-                src={imagens[currentSlide].url}
-                alt={`${imovel.titulo} - Foto ${currentSlide + 1}`}
-                fill
-                priority
-                className="object-cover transition-all duration-300 group-hover:scale-[1.01]"
-              />
+              {imagens.map((img, index) => (
+                <Image
+                  key={img.url}
+                  src={img.url}
+                  alt={`${imovel.titulo} - Foto ${index + 1}`}
+                  fill
+                  priority={index === 0}
+                  className={`object-cover transition-opacity duration-300 ${index === currentSlide ? "opacity-100" : "opacity-0"} group-hover:scale-[1.01]`}
+                />
+              ))}
               <div className="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center pointer-events-none">
                 <span className="bg-white/90 backdrop-blur-sm text-slate-800 text-xs font-bold px-4 py-2 rounded-xl shadow">🔍 Clique para Ampliar</span>
               </div>
 
               {imagens.length > 1 && (
                 <>
-                  <button onClick={nextSlide} className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/80 backdrop-blur-md hover:bg-white p-2 rounded-full shadow-md text-slate-800 transition-all cursor-pointer z-10">
+                  <button onClick={(e) => { e.stopPropagation(); prevSlide(); }} className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/80 backdrop-blur-md hover:bg-white p-2 rounded-full shadow-md text-slate-800 transition-all cursor-pointer z-10">
                     <BiChevronLeft size={26} />
                   </button>
-                  <button onClick={nextSlide} className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/80 backdrop-blur-md hover:bg-white p-2 rounded-full shadow-md text-slate-800 transition-all cursor-pointer z-10">
+                  <button onClick={(e) => { e.stopPropagation(); nextSlide(); }} className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/80 backdrop-blur-md hover:bg-white p-2 rounded-full shadow-md text-slate-800 transition-all cursor-pointer z-10">
                     <BiChevronRight size={26} />
                   </button>
                   <span className="absolute bottom-4 right-4 bg-slate-900/80 backdrop-blur-sm text-white text-[11px] font-bold px-3 py-1.5 rounded-lg tracking-wider z-10">
